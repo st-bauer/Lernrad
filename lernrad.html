@@ -488,26 +488,16 @@ function saveSession() {
 }
 
 async function autoSyncToNextcloud() {
-  const url  = localStorage.getItem('lc_wdav_url');
-  const pass = localStorage.getItem('lc_wdav_pass');
-  const file = localStorage.getItem('lc_wdav_file') || 'lerncoaching.json';
-  if (!url || !pass) return; // not configured – silent
-
+  const url = localStorage.getItem('lc_worker_url');
+  if (!url) return; // not configured – silent
   try {
-    const fileUrl = url.endsWith('/') ? url + file : url + '/' + file;
-    const resp = await fetch(fileUrl, {
+    const resp = await fetch(url, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'Basic ' + btoa('dummy:' + pass),
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(db, null, 2),
     });
-    if (resp.ok || resp.status === 201 || resp.status === 204) {
-      console.log('✓ Nextcloud sync ok');
-    } else {
-      console.warn('Nextcloud sync failed:', resp.status);
-    }
+    if (resp.ok) console.log('✓ Nextcloud sync ok');
+    else console.warn('Nextcloud sync failed:', resp.status);
   } catch(e) {
     console.warn('Nextcloud sync error:', e.message);
   }

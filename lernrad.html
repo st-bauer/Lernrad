@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernrad – Lerncoaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f5f2ec; --surface: #fff; --ink: #1a1714; --mid: #5a5550;
+  --light: #9a9490; --rule: #e0dbd3; --accent: #2d5c4e; --accent2: #c4622d;
+  --cream: #ede8e0; --shadow: 0 2px 20px rgba(0,0,0,0.07);
+}
+html, body { min-height: 100vh; background: var(--bg); font-family: 'Instrument Sans', sans-serif; color: var(--ink); }
+.screen { display: none; }
+.screen.active { display: block; }
+.app { max-width: 960px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* HEADER */
+.header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--accent); flex-wrap: wrap; gap: 12px; }
+.header-left .eyebrow { font-size: 9px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 3px; }
+.header-left h1 { font-family: 'Fraunces', serif; font-weight: 300; font-size: 28px; line-height: 1; }
+.header-left h1 em { font-style: italic; color: var(--accent); }
+.header-left .student-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--ink); margin-top: 2px; }
+.header-left .student-meta { font-size: 11px; color: var(--light); margin-top: 2px; }
+.header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* SESSION HISTORY BAR */
+.history-bar {
+  display: flex; gap: 6px; align-items: center; margin-bottom: 16px;
+  background: white; border: 1px solid var(--rule); border-radius: 8px; padding: 10px 14px; flex-wrap: wrap;
+}
+.history-label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--light); margin-right: 4px; white-space: nowrap; }
+.history-dot {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; color: var(--mid);
+  cursor: pointer; transition: all .15s; flex-shrink: 0; background: white;
+  position: relative;
+}
+.history-dot:hover { border-color: var(--accent); color: var(--accent); }
+.history-dot.current { border-color: var(--accent); background: var(--accent); color: white; }
+.history-dot .hd-tip {
+  display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: white; font-size: 9px; padding: 3px 7px; border-radius: 3px; white-space: nowrap;
+  font-family: 'Instrument Sans', sans-serif; font-weight: 400;
+}
+.history-dot:hover .hd-tip { display: block; }
+.history-connector { width: 16px; height: 1px; background: var(--rule); flex-shrink: 0; }
+.history-new { border-style: dashed; color: var(--light); font-size: 16px; }
+.history-new:hover { border-color: var(--accent); color: var(--accent); background: #f0faf6; }
+
+/* PHASE NAV */
+.phase-nav { display: flex; gap: 4px; margin-bottom: 20px; background: var(--cream); border-radius: 8px; padding: 4px; }
+.phase-btn { flex: 1; padding: 9px 12px; border: none; border-radius: 5px; font-family: 'Instrument Sans', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; background: none; color: var(--light); transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.phase-btn .num { width: 18px; height: 18px; border-radius: 50%; background: var(--rule); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--light); transition: all .2s; flex-shrink: 0; }
+.phase-btn.active { background: white; color: var(--ink); box-shadow: var(--shadow); }
+.phase-btn.active .num { background: var(--accent); color: white; }
+.phase-btn.done .num { background: var(--accent); color: white; opacity: 0.5; }
+.phase-btn.done { color: var(--mid); }
+
+/* P1 LAYOUT */
+.p1-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+.wheel-area { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.wheel-container { position: relative; width: 100%; max-width: 460px; cursor: crosshair; }
+.wheel-container canvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 32px rgba(45,92,78,0.12)); }
+.wheel-hint { font-size: 10px; color: var(--light); text-align: center; font-style: italic; }
+.score-row { width: 100%; display: flex; gap: 8px; }
+.score-card { flex: 1; background: white; border: 1px solid var(--rule); border-radius: 6px; padding: 10px 14px; }
+.score-card .sc-label { font-size: 8px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--light); display: block; margin-bottom: 2px; }
+.score-card .sc-num { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; line-height: 1; }
+.score-card .sc-sub { font-size: 9px; color: var(--mid); }
+.score-card.today .sc-num { color: var(--accent); }
+.score-card.last .sc-num { color: var(--light); }
+.threshold-bar { width: 100%; display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: #fff8f5; border-radius: 6px; border: 1px solid #f0d0c0; }
+.threshold-bar label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent2); white-space: nowrap; }
+.threshold-bar input { accent-color: var(--accent2); width: 70px; }
+.threshold-bar .tv { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--accent2); min-width: 12px; }
+.threshold-bar .th { font-size: 9px; color: var(--light); font-style: italic; }
+
+/* SEG LIST */
+.seg-list { display: flex; flex-direction: column; gap: 3px; }
+.seg-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; border: 1.5px solid transparent; background: white; transition: all .15s; }
+.seg-item.low { border-color: #f0d0c0; background: #fff8f5; }
+.seg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.seg-info { flex: 1; min-width: 0; }
+.seg-label { font-size: 11.5px; font-weight: 600; }
+.seg-sub { font-size: 9px; color: var(--light); font-style: italic; }
+.seg-delta { font-size: 9px; font-weight: 600; min-width: 22px; text-align: right; }
+.seg-delta.up { color: #4a9468; }
+.seg-delta.down { color: var(--accent2); }
+.seg-delta.same { color: var(--light); }
+.seg-val { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; min-width: 20px; text-align: right; }
+
+/* P2 LAYOUT */
+.p2-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.note-card { background: white; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.note-card-header { padding: 9px 14px 8px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 7px; }
+.note-card-icon { font-size: 13px; }
+.note-card-title { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--mid); }
+.note-card-body textarea { width: 100%; background: none; border: none; outline: none; font-family: 'Instrument Sans', sans-serif; font-size: 12px; color: var(--ink); resize: none; line-height: 1.55; padding: 10px 14px 12px; }
+.note-card-body textarea::placeholder { color: var(--light); }
+.note-card.private { border-style: dashed; }
+.note-card.private .note-card-body textarea { font-style: italic; }
+.vereinbarung-card { background: white; border: 2px solid var(--accent); border-radius: 8px; overflow: hidden; grid-column: 1 / -1; }
+.vereinbarung-card .note-card-header { background: var(--accent); border-bottom: none; }
+.vereinbarung-card .note-card-title { color: rgba(255,255,255,0.8); }
+.vb-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.vb-body textarea { width: 100%; background: var(--bg); border: 1px solid var(--rule); border-radius: 5px; padding: 8px 10px; font-family: 'Instrument Sans', sans-serif; font-size: 13px; color: var(--ink); resize: none; outline: none; line-height: 1.5; }
+.vb-body textarea:focus { border-color: var(--accent); }
+.vb-meta-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.vb-mf { display: flex; flex-direction: column; gap: 3px; }
+.vb-mf label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); }
+.vb-mf input { background: none; border: none; border-bottom: 1px solid var(--rule); font-family: 'Instrument Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 2px 0; width: 100px; outline: none; }
+.zuv-row { display: flex; align-items: center; gap: 8px; }
+.zuv-row input[type=range] { width: 80px; accent-color: var(--accent); }
+.zuv-num { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--accent); min-width: 18px; }
+
+/* HILFSKARTEN */
+.hk-panel { background: #fff8f5; border: 1px solid #f0d0c0; border-radius: 8px; overflow: hidden; grid-column: 1 / -1; display: none; }
+.hk-panel.visible { display: block; }
+.hk-panel-header { padding: 9px 14px 8px; border-bottom: 1px solid #f0d0c0; }
+.hk-panel-title { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent2); }
+.hk-list { padding: 8px 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+.hk-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: white; border-radius: 5px; border: 1px solid #f0d0c0; }
+.hk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.hk-label { flex: 1; font-size: 11.5px; font-weight: 600; }
+.hk-val { font-family: 'Fraunces', serif; font-size: 15px; color: var(--accent2); font-weight: 600; margin-right: 6px; }
+.hk-link { font-size: 10px; font-weight: 600; color: var(--accent); text-decoration: none; margin-right: 8px; white-space: nowrap; }
+.hk-link:hover { text-decoration: underline; }
+.hk-qr canvas, .hk-qr img { width: 40px !important; height: 40px !important; border-radius: 3px; display: block; }
+
+/* P3 */
+.p3-layout { display: flex; flex-direction: column; gap: 14px; }
+.save-panel { background: white; border: 1px solid var(--rule); border-radius: 8px; padding: 16px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.save-panel-info p { font-size: 12px; color: var(--mid); line-height: 1.5; }
+.save-panel-info strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 3px; }
+
+/* BUTTONS */
+.btn { padding: 9px 18px; border-radius: 5px; border: none; font-family: 'Instrument Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #235048; }
+.btn-ghost { background: none; border: 1.5px solid var(--rule); color: var(--mid); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 6px 14px; font-size: 11px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* PRINT */
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { background: white; }
+  .phase-nav, .actions, .threshold-bar, .no-print, .wheel-hint,
+  .history-bar, .hk-qr, .header-right, .save-panel { display: none !important; }
+  .app { padding: 8mm; max-width: 100%; }
+  .header { margin-bottom: 5mm; padding-bottom: 4mm; }
+  .print-layout { display: grid !important; grid-template-columns: 90mm 1fr; gap: 7mm; align-items: start; }
+  .p1-layout, .p2-layout, .p3-layout { display: none !important; }
+  .print-wheel-col, .print-notes-col { display: flex !important; flex-direction: column; gap: 3mm; }
+  .print-seg-item { display: flex !important; align-items: center; gap: 5px; padding: 2px 0; border-bottom: 0.5px solid var(--rule); }
+  .print-seg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .print-seg-label { font-size: 8.5px; flex: 1; }
+  .print-seg-delta { font-size: 8px; font-weight: 600; min-width: 18px; text-align: right; }
+  .print-seg-val { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600; min-width: 16px; text-align: right; }
+  .print-note { margin-bottom: 3mm; }
+  .print-note-label { font-size: 7.5px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+  .print-note-line { border-bottom: 0.5px solid var(--rule); min-height: 14px; font-size: 9.5px; color: var(--ink); padding-bottom: 2px; margin-bottom: 2px; }
+  .print-vereinbarung { background: #f5f2ec; border-radius: 4px; padding: 3mm; margin-top: 2mm; }
+  .print-vereinbarung-label { font-size: 8px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+  .print-hk-tag { font-size: 8px; padding: 1px 6px; border-radius: 3px; background: #fff8f5; border: 0.5px solid #f0d0c0; color: var(--accent2); font-weight: 600; display: inline-block; margin: 1px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <span class="eyebrow">Lerncoaching · Jahrgangsstufe 7–8</span>
+      <h1>Mein Lern<em>rad</em></h1>
+      <div class="student-name" id="studentName">–</div>
+      <div class="student-meta" id="studentMeta"></div>
+    </div>
+    <div class="header-right no-print">
+      <input type="text" id="dateInput" style="background:none;border:none;border-bottom:1px solid var(--rule);font-family:'Instrument Sans',sans-serif;font-size:12px;color:var(--ink);padding:2px 0;width:90px;outline:none;" placeholder="Datum">
+      <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇ Export</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+    </div>
+  </div>
+
+  <!-- SESSION HISTORY -->
+  <div class="history-bar no-print" id="historyBar">
+    <span class="history-label">Verlauf</span>
+    <div id="historyDots"></div>
+  </div>
+
+  <!-- PHASE NAV -->
+  <div class="phase-nav no-print">
+    <button class="phase-btn active" onclick="goPhase(1)" id="pb1"><span class="num">1</span> Einstieg · Rad</button>
+    <button class="phase-btn" onclick="goPhase(2)" id="pb2"><span class="num">2</span> Gespräch · Notizen</button>
+    <button class="phase-btn" onclick="goPhase(3)" id="pb3"><span class="num">3</span> Abschluss · Speichern</button>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="screen active" id="phase1">
+    <div class="p1-layout">
+      <div class="wheel-area">
+        <div class="wheel-container">
+          <canvas id="wheel" width="460" height="460"></canvas>
+        </div>
+        <div class="wheel-hint no-print">Klick ins Rad → Wert setzen · Rechtsklick → Vergleichswert</div>
+        <div class="score-row">
+          <div class="score-card today">
+            <span class="sc-label">Heute</span>
+            <span class="sc-num" id="avgToday">–</span>
+            <span class="sc-sub" id="avgLabelToday">Ø Alle Bereiche</span>
+          </div>
+          <div class="score-card last">
+            <span class="sc-label">Letztes Gespräch</span>
+            <span class="sc-num" id="avgLast">–</span>
+            <span class="sc-sub" id="avgLabelLast">kein Wert</span>
+          </div>
+        </div>
+        <div class="threshold-bar no-print">
+          <label>Karte ab ≤</label>
+          <input type="range" id="threshSlider" min="1" max="6" value="4" oninput="setThreshold(this.value)">
+          <span class="tv" id="threshVal">4</span>
+          <span class="th">→ Hilfskarte</span>
+        </div>
+      </div>
+      <div>
+        <div class="seg-list" id="segList"></div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="goPhase(2)">Weiter →</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetToday()">Zurücksetzen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="screen" id="phase2">
+    <div class="p2-layout">
+      <div class="note-card">
+        <div class="note-card-header"><span class="note-card-icon">✦</span><span class="note-card-title">Was lief gut seit letztem Gespräch?</span></div>
+        <div class="note-card-body"><textarea rows="4" id="n1" placeholder="Erfolge, Fortschritte, positive Momente …"></textarea></div>
+      </div>
+      <div class="note-card">
+        <div class="note-card-header"><span class="note-card-icon">◎</span><span class="note-card-title">Auffälliger Bereich heute</span></div>
+        <div class="note-card-body"><textarea rows="4" id="n2" placeholder="Welcher Bereich war Thema? Was wurde sichtbar?"></textarea></div>
+      </div>
+      <div class="note-card">
+        <div class="note-card-header"><span class="note-card-icon">★</span><span class="note-card-title">Stärke des Gesprächs</span></div>
+        <div class="note-card-body"><textarea rows="4" id="n3" placeholder="Was hat diese Person heute gut gemacht, erkannt oder gesagt?"></textarea></div>
+      </div>
+      <div class="note-card private">
+        <div class="note-card-header"><span class="note-card-icon">🔒</span><span class="note-card-title">Meine Beobachtung (nur für mich)</span></div>
+        <div class="note-card-body"><textarea rows="4" id="n4" placeholder="Energie, Stimmung, was unter der Oberfläche blieb …"></textarea></div>
+      </div>
+      <div class="vereinbarung-card">
+        <div class="note-card-header"><span class="note-card-icon" style="color:white;">→</span><span class="note-card-title">Vereinbarung</span></div>
+        <div class="vb-body">
+          <textarea rows="2" id="vbText" placeholder="Was genau wird bis zum nächsten Gespräch konkret umgesetzt?"></textarea>
+          <div class="vb-meta-row">
+            <div class="vb-mf"><label>Bis wann</label><input type="text" id="vbDate" placeholder="Datum / KW"></div>
+            <div class="vb-mf">
+              <label>Zuversicht (1–10)</label>
+              <div class="zuv-row">
+                <input type="range" min="1" max="10" value="7" oninput="document.getElementById('zuvNum').textContent=this.value">
+                <span class="zuv-num" id="zuvNum">7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hk-panel" id="hkPanel">
+        <div class="hk-panel-header"><div class="hk-panel-title">Empfohlene Hilfskarten</div></div>
+        <div class="hk-list" id="hkList"></div>
+      </div>
+    </div>
+    <div class="actions no-print">
+      <button class="btn btn-ghost" onclick="goPhase(1)">← Zurück</button>
+      <button class="btn btn-primary" onclick="goPhase(3)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="screen" id="phase3">
+    <div class="p3-layout">
+      <div class="save-panel">
+        <div class="save-panel-info">
+          <p><strong>Gespräch speichern</strong>Speichert alle Werte und Notizen für diesen Schüler / diese Schülerin. Danach im Dashboard exportieren.</p>
+        </div>
+        <button class="btn btn-primary" onclick="saveSession()">💾 Gespräch speichern</button>
+      </div>
+      <div class="save-panel">
+        <div class="save-panel-info">
+          <p><strong>Drucken / PDF</strong>Druckt das vollständige Protokoll auf A4.</p>
+        </div>
+        <button class="btn btn-primary" onclick="window.print()">🖨 Drucken / PDF</button>
+      </div>
+      <div class="save-panel">
+        <div class="save-panel-info">
+          <p><strong>Gesamtdaten exportieren</strong>Exportiert alle Schüler:innen als JSON → in Nextcloud speichern.</p>
+        </div>
+        <button class="btn btn-ghost" onclick="exportData()">⬇ Alle Daten exportieren</button>
+      </div>
+    </div>
+    <div class="actions no-print">
+      <button class="btn btn-ghost" onclick="goPhase(2)">← Zurück</button>
+      <button class="btn btn-ghost" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+    </div>
+  </div>
+
+  <!-- PRINT LAYOUT -->
+  <div class="print-layout" style="display:none;" id="printLayout">
+    <div class="print-wheel-col">
+      <canvas id="wheelPrint" width="340" height="340" style="width:100%;height:auto;"></canvas>
+      <div id="printSegList"></div>
+    </div>
+    <div class="print-notes-col" id="printNotesCol"></div>
+  </div>
+
+</div>
+
+<script>
+const BASE = 'https://st-bauer.github.io/Lernrad/';
+const SEGS = [
+  { label:"Motivation",              sub:"Ich bin motiviert und gehe gerne an meine Aufgaben.",   color:"#2d5c4e", short:"Motivation",    file:"karte-motivation.html" },
+  { label:"Ich plane meinen Tag",    sub:"Ich weiß, was ich wann mache – und halte mich daran.",  color:"#3a7a5c", short:"Planung",        file:"karte-planung.html" },
+  { label:"Wenn's schwierig wird",   sub:"Ich bleibe dran, auch wenn etwas nicht sofort klappt.", color:"#4a9468", short:"Durchhalten",    file:"karte-durchhalten.html" },
+  { label:"Ich lerne clever",        sub:"Ich nutze Strategien, die wirklich zu mir passen.",     color:"#6aab7a", short:"Clever lernen",  file:"karte-clever.html" },
+  { label:"Konzentriert bleiben",    sub:"Ich schaffe es, fokussiert zu arbeiten.",                color:"#c4622d", short:"Fokus",          file:"karte-fokus.html" },
+  { label:"Wie's mir geht",          sub:"Ich fühle mich gut genug, um lernen zu können.",        color:"#d4834a", short:"Wohlbefinden",   file:"karte-wohlbefinden.html" },
+  { label:"Mit anderen",             sub:"Mit Mitschüler:innen und Lehrkräften läuft es gut.",    color:"#7a5c8a", short:"Miteinander",    file:"karte-miteinander.html" },
+  { label:"Ich kenne meine Stärken", sub:"Ich weiß, was ich gut kann – und setze es ein.",       color:"#4a6888", short:"Stärken",         file:"karte-staerken.html" },
+];
+
+let db = { students: [], version: 1 };
+let studentId = null;
+let student = null;
+let todayVals = new Array(SEGS.length).fill(5);
+let lastVals  = new Array(SEGS.length).fill(null);
+let threshold = 4;
+let viewingSessionIdx = null; // null = new session
+const qrDone = {};
+
+// ── INIT ──
+function init() {
+  loadDB();
+  const params = new URLSearchParams(window.location.search);
+  studentId = params.get('id');
+
+  if (!studentId) { window.location.href = 'dashboard.html'; return; }
+  student = db.students.find(s => s.id === studentId);
+  if (!student) { window.location.href = 'dashboard.html'; return; }
+
+  document.getElementById('studentName').textContent = student.name;
+  document.getElementById('studentMeta').textContent = (student.klasse || '') + (student.sessions?.length ? ` · ${student.sessions.length} Gespräch${student.sessions.length !== 1 ? 'e' : ''}` : ' · Erstes Gespräch');
+
+  const d = new Date();
+  document.getElementById('dateInput').value = `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+
+  // Load last session as comparison
+  if (student.sessions && student.sessions.length > 0) {
+    lastVals = [...student.sessions[student.sessions.length-1].values];
+  }
+
+  buildHistory();
+  buildSegList();
+  setupWheelClick();
+  drawWheel('wheel', todayVals, lastVals);
+  updateScores();
+}
+
+// ── DB ──
+function loadDB() {
+  const raw = localStorage.getItem('lerncoach_db');
+  if (raw) { try { db = JSON.parse(raw); } catch(e) {} }
+}
+function saveDB() {
+  localStorage.setItem('lerncoach_db', JSON.stringify(db));
+}
+
+// ── HISTORY BAR ──
+function buildHistory() {
+  const container = document.getElementById('historyDots');
+  container.innerHTML = '';
+  const sessions = student.sessions || [];
+
+  sessions.forEach((sess, i) => {
+    if (i > 0) {
+      const conn = document.createElement('div');
+      conn.className = 'history-connector';
+      container.appendChild(conn);
+    }
+    const dot = document.createElement('div');
+    dot.className = 'history-dot';
+    dot.textContent = i + 1;
+    dot.innerHTML += `<span class="hd-tip">${sess.date}</span>`;
+    dot.onclick = () => loadSession(i);
+    container.appendChild(dot);
+  });
+
+  // New session dot
+  if (sessions.length > 0) {
+    const conn = document.createElement('div');
+    conn.className = 'history-connector';
+    container.appendChild(conn);
+  }
+  const newDot = document.createElement('div');
+  newDot.className = 'history-dot history-new current';
+  newDot.textContent = sessions.length + 1;
+  newDot.innerHTML += `<span class="hd-tip">Neues Gespräch</span>`;
+  newDot.onclick = () => loadNewSession();
+  container.appendChild(newDot);
+}
+
+function loadSession(idx) {
+  const sess = student.sessions[idx];
+  viewingSessionIdx = idx;
+  todayVals = [...sess.values];
+  // comparison = session before
+  lastVals = idx > 0 ? [...student.sessions[idx-1].values] : new Array(SEGS.length).fill(null);
+  document.getElementById('dateInput').value = sess.date;
+  document.getElementById('n1').value = sess.notes?.n1 || '';
+  document.getElementById('n2').value = sess.notes?.n2 || '';
+  document.getElementById('n3').value = sess.notes?.n3 || '';
+  document.getElementById('n4').value = sess.notes?.n4 || '';
+  document.getElementById('vbText').value = sess.vereinbarung?.text || '';
+  document.getElementById('vbDate').value = sess.vereinbarung?.bis || '';
+  document.getElementById('zuvNum').textContent = sess.vereinbarung?.zuversicht || '7';
+  updateSegList(); updateScores(); drawWheel('wheel', todayVals, lastVals);
+  document.querySelectorAll('.history-dot').forEach((d,i) => d.classList.toggle('current', i === idx));
+  goPhase(1);
+}
+
+function loadNewSession() {
+  viewingSessionIdx = null;
+  todayVals = new Array(SEGS.length).fill(5);
+  lastVals = student.sessions?.length > 0 ? [...student.sessions[student.sessions.length-1].values] : new Array(SEGS.length).fill(null);
+  const d = new Date();
+  document.getElementById('dateInput').value = `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+  ['n1','n2','n3','n4','vbText','vbDate'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('zuvNum').textContent = '7';
+  updateSegList(); updateScores(); drawWheel('wheel', todayVals, lastVals);
+  document.querySelectorAll('.history-dot').forEach((d,i,arr) => d.classList.toggle('current', i === arr.length-1));
+  goPhase(1);
+}
+
+// ── SAVE SESSION ──
+function saveSession() {
+  const session = {
+    date: document.getElementById('dateInput').value,
+    values: [...todayVals],
+    notes: {
+      n1: document.getElementById('n1').value,
+      n2: document.getElementById('n2').value,
+      n3: document.getElementById('n3').value,
+      n4: document.getElementById('n4').value,
+    },
+    vereinbarung: {
+      text: document.getElementById('vbText').value,
+      bis: document.getElementById('vbDate').value,
+      zuversicht: document.getElementById('zuvNum').textContent,
+    },
+    savedAt: new Date().toISOString(),
+  };
+
+  if (!student.sessions) student.sessions = [];
+
+  if (viewingSessionIdx !== null) {
+    student.sessions[viewingSessionIdx] = session;
+    alert('Gespräch aktualisiert.');
+  } else {
+    student.sessions.push(session);
+    viewingSessionIdx = student.sessions.length - 1;
+    alert(`Gespräch ${student.sessions.length} gespeichert!\n\nBitte danach exportieren und in Nextcloud ablegen.`);
+  }
+
+  saveDB();
+  document.getElementById('studentMeta').textContent = (student.klasse || '') + ` · ${student.sessions.length} Gespräch${student.sessions.length !== 1 ? 'e' : ''}`;
+  buildHistory();
+  // Auto-sync to Nextcloud if configured
+  autoSyncToNextcloud();
+}
+
+async function autoSyncToNextcloud() {
+  const url  = localStorage.getItem('lc_wdav_url');
+  const pass = localStorage.getItem('lc_wdav_pass');
+  const file = localStorage.getItem('lc_wdav_file') || 'lerncoaching.json';
+  if (!url || !pass) return; // not configured – silent
+
+  try {
+    const fileUrl = url.endsWith('/') ? url + file : url + '/' + file;
+    const resp = await fetch(fileUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Basic ' + btoa('dummy:' + pass),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(db, null, 2),
+    });
+    if (resp.ok || resp.status === 201 || resp.status === 204) {
+      console.log('✓ Nextcloud sync ok');
+    } else {
+      console.warn('Nextcloud sync failed:', resp.status);
+    }
+  } catch(e) {
+    console.warn('Nextcloud sync error:', e.message);
+  }
+}
+
+// ── EXPORT ──
+function exportData() {
+  const json = JSON.stringify(db, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `lerncoaching_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── PHASE NAV ──
+function goPhase(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('phase'+n).classList.add('active');
+  ['pb1','pb2','pb3'].forEach((id,i) => {
+    const btn = document.getElementById(id);
+    btn.classList.remove('active','done');
+    if (i+1===n) btn.classList.add('active');
+    else if (i+1<n) btn.classList.add('done');
+  });
+  if (n===2) buildHkPanel();
+  if (n===3) buildPrintLayout();
+  window.scrollTo(0,0);
+}
+
+// ── SEG LIST ──
+function buildSegList() {
+  const el = document.getElementById('segList');
+  el.innerHTML = '';
+  SEGS.forEach((seg,i) => {
+    const div = document.createElement('div');
+    div.className = 'seg-item'; div.id = `si-${i}`;
+    div.innerHTML = `
+      <span class="seg-dot" style="background:${seg.color}"></span>
+      <div class="seg-info">
+        <div class="seg-label">${seg.label}</div>
+        <div class="seg-sub">${seg.sub}</div>
+      </div>
+      <span class="seg-delta" id="sd-${i}"></span>
+      <span class="seg-val" id="sv-${i}" style="color:${seg.color}">5</span>
+    `;
+    el.appendChild(div);
+  });
+  updateSegList();
+}
+
+function updateSegList() {
+  SEGS.forEach((seg,i) => {
+    document.getElementById(`sv-${i}`).textContent = todayVals[i];
+    document.getElementById(`si-${i}`).classList.toggle('low', todayVals[i] <= threshold);
+    const de = document.getElementById(`sd-${i}`);
+    const prev = lastVals[i];
+    if (prev !== null && prev !== undefined) {
+      const diff = todayVals[i] - prev;
+      de.textContent = diff > 0 ? `+${diff}` : diff < 0 ? `${diff}` : '=';
+      de.className = `seg-delta ${diff > 0 ? 'up' : diff < 0 ? 'down' : 'same'}`;
+    } else { de.textContent=''; de.className='seg-delta'; }
+  });
+}
+
+// ── SCORES ──
+function updateScores() {
+  const avg = vals => (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+  const lbl = v => v>=7.5 ? "Stark aufgestellt 💪" : v>=5 ? "Solide Basis 👍" : "Luft nach oben 🌱";
+  const at = parseFloat(avg(todayVals));
+  document.getElementById('avgToday').textContent = at;
+  document.getElementById('avgLabelToday').textContent = lbl(at);
+  const hasLast = lastVals.some(v => v!==null && v!==undefined);
+  if (hasLast) {
+    const vl = lastVals.map((v,i) => v!==null&&v!==undefined?v:todayVals[i]);
+    const al = parseFloat(avg(vl));
+    document.getElementById('avgLast').textContent = al;
+    document.getElementById('avgLabelLast').textContent = lbl(al);
+  } else {
+    document.getElementById('avgLast').textContent = '–';
+    document.getElementById('avgLabelLast').textContent = 'kein Wert';
+  }
+}
+
+// ── THRESHOLD ──
+function setThreshold(v) {
+  threshold = parseInt(v);
+  document.getElementById('threshVal').textContent = v;
+  updateSegList();
+  drawWheel('wheel', todayVals, lastVals);
+}
+
+// ── WHEEL CLICK ──
+function setupWheelClick() {
+  const canvas = document.getElementById('wheel');
+  canvas.addEventListener('click', e => handleClick(e, false));
+  canvas.addEventListener('contextmenu', e => { e.preventDefault(); handleClick(e, true); });
+}
+function handleClick(e, isRight) {
+  const canvas = document.getElementById('wheel');
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX-rect.left)*(canvas.width/rect.width);
+  const my = (e.clientY-rect.top)*(canvas.height/rect.height);
+  const cx=canvas.width/2, cy=canvas.height/2, maxR=canvas.width*0.40;
+  const dx=mx-cx, dy=my-cy, dist=Math.sqrt(dx*dx+dy*dy);
+  if (dist>maxR+20||dist<6) return;
+  const n=SEGS.length, step=(Math.PI*2)/n, off=-Math.PI/2;
+  let angle=Math.atan2(dy,dx);
+  if(angle<off) angle+=Math.PI*2;
+  const seg=((Math.floor((angle-off)/step)%n)+n)%n;
+  const val=Math.max(1,Math.min(10,Math.round((dist/maxR)*10)));
+  if(isRight) { lastVals[seg]=val; } else { todayVals[seg]=val; }
+  updateSegList(); updateScores(); drawWheel('wheel',todayVals,lastVals);
+}
+
+// ── WHEEL DRAW ──
+function drawWheel(cid, tv, lv) {
+  const canvas=document.getElementById(cid); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,maxR=W*0.40;
+  const n=SEGS.length,step=(Math.PI*2)/n,off=-Math.PI/2;
+  ctx.clearRect(0,0,W,H);
+  ctx.beginPath(); ctx.arc(cx,cy,maxR+7,0,Math.PI*2); ctx.fillStyle='#f0ece4'; ctx.fill();
+  for(let r=1;r<=10;r++){
+    const radius=(r/10)*maxR;
+    ctx.beginPath();
+    for(let s=0;s<n;s++){const a=off+s*step;const x=cx+radius*Math.cos(a),y=cy+radius*Math.sin(a);s===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath();
+    if(r===threshold){ctx.strokeStyle='#c4622d';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);}
+    else{ctx.strokeStyle=r===10?'#c8c0b4':r===5?'#d8d0c8':'#e8e2da';ctx.lineWidth=r===10?1.5:r===5?0.8:0.5;ctx.stroke();}
+  }
+  for(let s=0;s<n;s++){const a=off+s*step;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));ctx.strokeStyle='#ddd8d0';ctx.lineWidth=0.8;ctx.stroke();}
+  const hasLast=lv&&lv.some(v=>v!==null&&v!==undefined);
+  if(hasLast){
+    ctx.beginPath();
+    for(let s=0;s<n;s++){const v=lv[s]??5;const a=off+s*step,r=(v/10)*maxR;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);s===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath();ctx.fillStyle='rgba(160,152,144,0.10)';ctx.fill();
+    ctx.strokeStyle='#b0a898';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);
+  }
+  for(let s=0;s<n;s++){const a1=off+s*step,a2=off+(s+1)*step,r=(tv[s]/10)*maxR;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a1,a2);ctx.closePath();ctx.fillStyle=tv[s]<=threshold?SEGS[s].color+'55':SEGS[s].color+'22';ctx.fill();}
+  ctx.beginPath();
+  for(let s=0;s<n;s++){const a=off+s*step,r=(tv[s]/10)*maxR;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);s===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+  ctx.closePath();
+  const grd=ctx.createRadialGradient(cx,cy,0,cx,cy,maxR);
+  grd.addColorStop(0,'rgba(45,92,78,0.5)');grd.addColorStop(1,'rgba(45,92,78,0.08)');
+  ctx.fillStyle=grd;ctx.fill();ctx.strokeStyle='#2d5c4e';ctx.lineWidth=2;ctx.stroke();
+  for(let s=0;s<n;s++){const a=off+s*step,r=(tv[s]/10)*maxR;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);const low=tv[s]<=threshold;ctx.beginPath();ctx.arc(x,y,low?7:5.5,0,Math.PI*2);ctx.fillStyle=low?'#c4622d':SEGS[s].color;ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();}
+  if(hasLast){for(let s=0;s<n;s++){const v=lv[s];if(v===null||v===undefined)continue;const a=off+s*step,r=(v/10)*maxR;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fillStyle='#b0a898';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();}}
+  const labelR=maxR+24;ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let s=0;s<n;s++){const a=off+s*step;const x=cx+labelR*Math.cos(a),y=cy+labelR*Math.sin(a);ctx.font='bold 9.5px Instrument Sans,sans-serif';ctx.fillStyle=tv[s]<=threshold?'#c4622d':SEGS[s].color;ctx.fillText(SEGS[s].short,x,y);}
+  const avg=(tv.reduce((a,b)=>a+b,0)/tv.length).toFixed(1);
+  ctx.beginPath();ctx.arc(cx,cy,20,0,Math.PI*2);ctx.fillStyle='#2d5c4e';ctx.fill();
+  ctx.font='bold 12px Fraunces,serif';ctx.fillStyle='white';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(avg,cx,cy);
+}
+
+// ── HILFSKARTEN ──
+function buildHkPanel() {
+  const low=SEGS.map((s,i)=>({...s,i,v:todayVals[i]})).filter(s=>s.v<=threshold);
+  const panel=document.getElementById('hkPanel');
+  const list=document.getElementById('hkList');
+  if(!low.length){panel.classList.remove('visible');return;}
+  panel.classList.add('visible'); list.innerHTML='';
+  low.forEach(seg=>{
+    const url=BASE+seg.file;
+    const item=document.createElement('div'); item.className='hk-item';
+    item.innerHTML=`<span class="hk-dot" style="background:${seg.color}"></span><span class="hk-label">${seg.label}</span><span class="hk-val">${seg.v}</span><a class="hk-link" href="${url}" target="_blank">Karte öffnen →</a><div class="hk-qr" id="hqr-${seg.i}"></div>`;
+    list.appendChild(item);
+    if(!qrDone[seg.i]){setTimeout(()=>{const el=document.getElementById(`hqr-${seg.i}`);if(el&&!el.hasChildNodes()){new QRCode(el,{text:url,width:40,height:40,colorDark:seg.color,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});qrDone[seg.i]=true;}},80);}
+  });
+}
+
+// ── PRINT ──
+function buildPrintLayout() {
+  drawWheel('wheelPrint',todayVals,lastVals);
+  const psl=document.getElementById('printSegList');
+  psl.innerHTML=SEGS.map((seg,i)=>{
+    const prev=lastVals[i];
+    let delta='';
+    if(prev!==null&&prev!==undefined){const d=todayVals[i]-prev;delta=d>0?`<span style="color:#4a9468">+${d}</span>`:d<0?`<span style="color:#c4622d">${d}</span>`:`<span style="color:#aaa">=</span>`;}
+    return `<div class="print-seg-item"><span class="print-seg-dot" style="background:${seg.color}"></span><span class="print-seg-label">${seg.label}</span><span class="print-seg-delta">${delta}</span><span class="print-seg-val" style="color:${seg.color}">${todayVals[i]}</span></div>`;
+  }).join('');
+  const low=SEGS.filter((_,i)=>todayVals[i]<=threshold).map(s=>s.short);
+  document.getElementById('printNotesCol').innerHTML=`
+    <div style="font-size:8px;color:var(--light);margin-bottom:2mm;">${student.name} · ${student.klasse||''} · Gespräch ${(student.sessions?.length||0)+1} · ${document.getElementById('dateInput').value}</div>
+    <div class="print-note"><div class="print-note-label">✦ Was lief gut?</div><div class="print-note-line">${document.getElementById('n1').value}</div><div class="print-note-line"></div></div>
+    <div class="print-note"><div class="print-note-label">◎ Auffälliger Bereich</div><div class="print-note-line">${document.getElementById('n2').value}</div></div>
+    <div class="print-note"><div class="print-note-label">★ Stärke des Gesprächs</div><div class="print-note-line">${document.getElementById('n3').value}</div><div class="print-note-line"></div></div>
+    <div class="print-vereinbarung">
+      <div class="print-vereinbarung-label">→ Vereinbarung</div>
+      <div class="print-note-line" style="min-height:16px;">${document.getElementById('vbText').value}</div>
+      <div class="print-note-line" style="min-height:14px;"></div>
+      <div style="font-size:9px;color:var(--mid);margin-top:2px;">Bis wann: <strong>${document.getElementById('vbDate').value||'–'}</strong> &nbsp; Zuversicht: <strong>${document.getElementById('zuvNum').textContent}/10</strong></div>
+    </div>
+    ${low.length?`<div style="margin-top:3mm;"><div class="print-note-label" style="color:var(--accent2);">Hilfskarten</div><div>${low.map(l=>`<span class="print-hk-tag">${l}</span>`).join('')}</div></div>`:''}
+    <div class="print-note" style="margin-top:3mm;"><div class="print-note-label" style="color:var(--mid);">🔒 Beobachtung</div><div class="print-note-line"></div><div class="print-note-line"></div></div>
+  `;
+}
+
+function resetToday() {
+  todayVals=new Array(SEGS.length).fill(5);
+  updateSegList(); updateScores(); drawWheel('wheel',todayVals,lastVals);
+}
+
+init();
+</script>
+</body>
+</html>

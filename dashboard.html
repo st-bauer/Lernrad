@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lerncoaching – Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f5f2ec; --surface: #fff; --ink: #1a1714; --mid: #5a5550;
+  --light: #9a9490; --rule: #e0dbd3; --accent: #2d5c4e; --accent2: #c4622d;
+  --cream: #ede8e0; --shadow: 0 2px 20px rgba(0,0,0,0.07);
+  --green: #4a9468; --yellow: #d4a020;
+}
+html, body { min-height: 100vh; background: var(--bg); font-family: 'Instrument Sans', sans-serif; color: var(--ink); }
+.app { max-width: 920px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* HEADER */
+.header { border-bottom: 2px solid var(--accent); padding-bottom: 14px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+.eyebrow { font-size: 9.5px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
+h1 { font-family: 'Fraunces', serif; font-weight: 300; font-size: 32px; line-height: 1; }
+h1 em { font-style: italic; color: var(--accent); }
+
+/* SYNC BAR */
+.sync-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: white; border: 1px solid var(--rule); border-radius: 8px;
+  padding: 10px 16px; margin-bottom: 20px;
+}
+.sync-status { display: flex; align-items: center; gap: 7px; flex: 1; }
+.sync-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.sync-dot.ok { background: var(--green); }
+.sync-dot.warn { background: var(--yellow); }
+.sync-dot.err { background: var(--accent2); }
+.sync-dot.idle { background: var(--light); }
+.sync-dot.spin { background: var(--accent); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.sync-text { font-size: 11px; color: var(--mid); }
+.sync-text strong { color: var(--ink); font-size: 12px; }
+
+/* TOOLBAR */
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.search-wrap { flex: 1; min-width: 180px; position: relative; }
+.search-wrap input { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid var(--rule); border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 13px; background: white; color: var(--ink); outline: none; }
+.search-wrap input:focus { border-color: var(--accent); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--light); }
+
+/* GRID */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.student-card { background: white; border: 1.5px solid var(--rule); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; gap: 8px; }
+.student-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-1px); }
+.student-card.no-session { border-style: dashed; }
+.sc-top { display: flex; align-items: center; gap: 10px; }
+.sc-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: white; }
+.sc-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.sc-class { font-size: 10px; color: var(--light); margin-top: 1px; }
+.sc-mini-wheel { width: 100%; height: 6px; border-radius: 3px; overflow: hidden; display: flex; gap: 1px; }
+.sc-mini-seg { flex: 1; border-radius: 1px; }
+.sc-meta { display: flex; justify-content: space-between; align-items: center; }
+.sc-avg { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--accent); }
+.sc-info { font-size: 10px; color: var(--light); text-align: right; line-height: 1.5; }
+.add-card { background: var(--cream); border: 2px dashed var(--rule); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 130px; color: var(--light); }
+.add-card:hover { border-color: var(--accent); color: var(--accent); }
+.add-icon { font-size: 24px; }
+.add-label { font-size: 12px; font-weight: 600; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--light); grid-column: 1/-1; }
+.empty-state .big { font-size: 48px; margin-bottom: 8px; }
+
+/* BUTTONS */
+.btn { padding: 8px 16px; border-radius: 5px; border: none; font-family: 'Instrument Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #235048; }
+.btn-ghost { background: none; border: 1.5px solid var(--rule); color: var(--mid); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-warn { background: none; border: 1.5px solid #f0d0c0; color: var(--accent2); }
+.btn-warn:hover { background: #fff0e8; }
+.btn-sm { padding: 6px 12px; font-size: 11px; }
+
+/* MODAL */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+.modal-bg.open { display: flex; }
+.modal { background: white; border-radius: 10px; padding: 24px; width: 420px; max-width: 100%; box-shadow: 0 8px 48px rgba(0,0,0,0.18); }
+.modal h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+.modal h2 em { font-style: italic; color: var(--accent); }
+.modal-sub { font-size: 11px; color: var(--mid); margin-bottom: 18px; line-height: 1.5; }
+.form-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.form-field label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--light); }
+.form-field input { padding: 9px 12px; border: 1.5px solid var(--rule); border-radius: 6px; font-family: 'Instrument Sans', sans-serif; font-size: 13px; color: var(--ink); outline: none; width: 100%; }
+.form-field input:focus { border-color: var(--accent); }
+.form-field .hint { font-size: 9.5px; color: var(--light); margin-top: 3px; line-height: 1.4; }
+.modal-actions { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+
+/* SETTINGS MODAL extras */
+.webdav-status { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; background: var(--cream); margin-bottom: 14px; font-size: 11px; color: var(--mid); }
+
+/* DANGER ZONE */
+.danger-zone { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.danger-zone h3 { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <span class="eyebrow">Schulleitung · Lerncoaching</span>
+      <h1>Coaching<em>übersicht</em></h1>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" onclick="openSettings()">⚙ Nextcloud</button>
+      <button class="btn btn-ghost btn-sm" onclick="syncFromNextcloud()">↓ Laden</button>
+      <button class="btn btn-primary btn-sm" onclick="syncToNextcloud()">↑ Speichern</button>
+    </div>
+  </div>
+
+  <!-- SYNC STATUS BAR -->
+  <div class="sync-bar">
+    <div class="sync-status">
+      <span class="sync-dot idle" id="syncDot"></span>
+      <div class="sync-text" id="syncText">
+        <strong id="syncTitle">Nextcloud nicht verbunden</strong><br>
+        <span id="syncSub">Klick auf ⚙ um WebDAV einzurichten</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="syncFromNextcloud()" id="loadBtn" style="display:none;">↓ Jetzt laden</button>
+    <button class="btn btn-primary btn-sm" onclick="syncToNextcloud()" id="saveBtn" style="display:none;">↑ Jetzt speichern</button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Schüler:in suchen …" oninput="renderGrid()">
+    </div>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Schüler:in hinzufügen</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- MODAL: SCHÜLER HINZUFÜGEN -->
+<div class="modal-bg" id="modalAdd">
+  <div class="modal">
+    <h2>Schüler:in <em>hinzufügen</em></h2>
+    <div class="form-field">
+      <label>Nachname, Vorname</label>
+      <input type="text" id="mName" placeholder="z.B. Mustermann, Max">
+    </div>
+    <div class="form-field">
+      <label>Klasse</label>
+      <input type="text" id="mClass" placeholder="z.B. 7b">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="addStudent()">Hinzufügen</button>
+      <button class="btn btn-ghost" onclick="closeModal('modalAdd')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: NEXTCLOUD EINSTELLUNGEN -->
+<div class="modal-bg" id="modalSettings">
+  <div class="modal">
+    <h2>Nextcloud <em>WebDAV</em></h2>
+    <p class="modal-sub">Deine Zugangsdaten werden nur lokal in deinem Browser gespeichert und niemals übertragen.</p>
+
+    <div class="webdav-status" id="wdavStatus">
+      <span>⚪</span> <span id="wdavStatusText">Noch nicht verbunden</span>
+    </div>
+
+    <div class="form-field">
+      <label>WebDAV-URL</label>
+      <input type="url" id="wdavUrl" placeholder="https://…/remote.php/dav/files/…/">
+      <span class="hint">Zu finden in Nextcloud → Einstellungen → Dateien → WebDAV-Adresse</span>
+    </div>
+    <div class="form-field">
+      <label>App-Passcode</label>
+      <input type="password" id="wdavPass" placeholder="Nextcloud App-Passwort (nicht dein Hauptpasswort)">
+      <span class="hint">Nextcloud → Profil → Einstellungen → Sicherheit → Neues App-Passwort erstellen</span>
+    </div>
+    <div class="form-field">
+      <label>Dateiname in Nextcloud</label>
+      <input type="text" id="wdavFile" placeholder="lerncoaching.json" value="lerncoaching.json">
+      <span class="hint">Die JSON-Datei wird in deinem Nextcloud-Hauptordner abgelegt.</span>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="testAndSaveWebDAV()">Verbindung testen & speichern</button>
+      <button class="btn btn-ghost" onclick="syncFromNextcloud()">↓ Jetzt laden</button>
+      <button class="btn btn-ghost" onclick="closeModal('modalSettings')">Schließen</button>
+    </div>
+
+    <div class="danger-zone">
+      <h3>Zugangsdaten löschen</h3>
+      <button class="btn btn-warn btn-sm" onclick="clearCredentials()">WebDAV-Zugangsdaten entfernen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#2d5c4e','#3a7a5c','#c4622d','#7a5c8a','#4a6888','#4a9468','#d4834a','#5a8a5a'];
+const SEG_COLORS = ['#2d5c4e','#3a7a5c','#4a9468','#6aab7a','#c4622d','#d4834a','#7a5c8a','#4a6888'];
+
+let db = { students: [], version: 1 };
+
+// ── WEBDAV CONFIG ──
+function getCreds() {
+  return {
+    url:  localStorage.getItem('lc_wdav_url')  || '',
+    pass: localStorage.getItem('lc_wdav_pass') || '',
+    file: localStorage.getItem('lc_wdav_file') || 'lerncoaching.json',
+  };
+}
+function saveCreds(url, pass, file) {
+  localStorage.setItem('lc_wdav_url',  url);
+  localStorage.setItem('lc_wdav_pass', pass);
+  localStorage.setItem('lc_wdav_file', file);
+}
+function clearCredentials() {
+  if (!confirm('WebDAV-Zugangsdaten wirklich löschen?')) return;
+  ['lc_wdav_url','lc_wdav_pass','lc_wdav_file'].forEach(k => localStorage.removeItem(k));
+  setSyncStatus('idle', 'Nextcloud nicht verbunden', 'Klick auf ⚙ um WebDAV einzurichten');
+  document.getElementById('loadBtn').style.display = 'none';
+  document.getElementById('saveBtn').style.display = 'none';
+  closeModal('modalSettings');
+}
+
+// ── SYNC STATUS ──
+function setSyncStatus(state, title, sub) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot ' + state;
+  document.getElementById('syncTitle').textContent = title;
+  document.getElementById('syncSub').textContent = sub;
+}
+
+// ── WEBDAV REQUEST ──
+async function webdavRequest(method, body = null) {
+  const { url, pass, file } = getCreds();
+  if (!url || !pass) throw new Error('Keine Zugangsdaten konfiguriert.');
+
+  // Build file URL
+  const fileUrl = url.endsWith('/') ? url + file : url + '/' + file;
+
+  const headers = {
+    'Authorization': 'Basic ' + btoa('dummy:' + pass), // Nextcloud App-Passcode: no username needed for token auth
+    'Content-Type': 'application/json',
+  };
+
+  const response = await fetch(fileUrl, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body, null, 2) : undefined,
+  });
+
+  return response;
+}
+
+// ── TEST CONNECTION ──
+async function testAndSaveWebDAV() {
+  const url  = document.getElementById('wdavUrl').value.trim();
+  const pass = document.getElementById('wdavPass').value.trim();
+  const file = document.getElementById('wdavFile').value.trim() || 'lerncoaching.json';
+
+  if (!url || !pass) { alert('Bitte URL und App-Passcode eingeben.'); return; }
+
+  document.getElementById('wdavStatusText').textContent = 'Verbindung wird getestet …';
+  document.getElementById('wdavStatus').querySelector('span').textContent = '🔄';
+
+  saveCreds(url, pass, file);
+
+  try {
+    // Try a PROPFIND on the base url to test credentials
+    const testUrl = url.endsWith('/') ? url : url + '/';
+    const resp = await fetch(testUrl, {
+      method: 'PROPFIND',
+      headers: {
+        'Authorization': 'Basic ' + btoa('dummy:' + pass),
+        'Depth': '0',
+      }
+    });
+
+    if (resp.status === 207 || resp.status === 200 || resp.status === 404) {
+      // 404 means credentials ok but folder not found – still ok
+      document.getElementById('wdavStatusText').textContent = '✓ Verbindung erfolgreich';
+      document.getElementById('wdavStatus').querySelector('span').textContent = '✅';
+      setSyncStatus('ok', 'Nextcloud verbunden', `${url}`);
+      document.getElementById('loadBtn').style.display = '';
+      document.getElementById('saveBtn').style.display = '';
+      alert('✓ Verbindung erfolgreich!\n\nDu kannst jetzt Daten laden und speichern.');
+    } else if (resp.status === 401) {
+      document.getElementById('wdavStatusText').textContent = '✗ Falsche Zugangsdaten (401)';
+      document.getElementById('wdavStatus').querySelector('span').textContent = '❌';
+      setSyncStatus('err', 'Verbindung fehlgeschlagen', 'App-Passcode prüfen');
+    } else {
+      document.getElementById('wdavStatusText').textContent = `Status ${resp.status} – prüfe die URL`;
+      document.getElementById('wdavStatus').querySelector('span').textContent = '⚠️';
+      setSyncStatus('warn', 'Unbekannter Status', `HTTP ${resp.status}`);
+    }
+  } catch(e) {
+    document.getElementById('wdavStatusText').textContent = '✗ Netzwerkfehler: ' + e.message;
+    document.getElementById('wdavStatus').querySelector('span').textContent = '❌';
+    setSyncStatus('err', 'Netzwerkfehler', e.message);
+  }
+}
+
+// ── LOAD FROM NEXTCLOUD ──
+async function syncFromNextcloud() {
+  const { url, pass, file } = getCreds();
+  if (!url || !pass) { openSettings(); return; }
+
+  setSyncStatus('spin', 'Lade von Nextcloud …', file);
+  try {
+    const fileUrl = url.endsWith('/') ? url + file : url + '/' + file;
+    const resp = await fetch(fileUrl, {
+      method: 'GET',
+      headers: { 'Authorization': 'Basic ' + btoa('dummy:' + pass) }
+    });
+
+    if (resp.status === 404) {
+      setSyncStatus('warn', 'Noch keine Daten in Nextcloud', 'Beim ersten Mal: Zuerst speichern.');
+      return;
+    }
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const imported = await resp.json();
+    if (!imported.students) throw new Error('Ungültiges Dateiformat');
+
+    // Merge strategy: server wins for existing IDs, local wins for new ones
+    const serverIds = new Set(imported.students.map(s => s.id));
+    const localOnly = db.students.filter(s => !serverIds.has(s.id));
+    db = imported;
+    db.students = [...db.students, ...localOnly];
+
+    saveLocalDB();
+    renderGrid();
+    const now = new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
+    setSyncStatus('ok', `Geladen um ${now}`, `${db.students.length} Schüler:innen · ${file}`);
+    document.getElementById('loadBtn').style.display = '';
+    document.getElementById('saveBtn').style.display = '';
+  } catch(e) {
+    setSyncStatus('err', 'Fehler beim Laden', e.message);
+    alert('Fehler beim Laden: ' + e.message);
+  }
+}
+
+// ── SAVE TO NEXTCLOUD ──
+async function syncToNextcloud() {
+  const { url, pass, file } = getCreds();
+  if (!url || !pass) { openSettings(); return; }
+
+  setSyncStatus('spin', 'Speichere in Nextcloud …', file);
+  try {
+    const fileUrl = url.endsWith('/') ? url + file : url + '/' + file;
+    const resp = await fetch(fileUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Basic ' + btoa('dummy:' + pass),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(db, null, 2),
+    });
+
+    if (resp.ok || resp.status === 201 || resp.status === 204) {
+      const now = new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
+      setSyncStatus('ok', `Gespeichert um ${now}`, `${db.students.length} Schüler:innen · ${file}`);
+      saveLocalDB(); // also update local cache
+    } else {
+      throw new Error(`HTTP ${resp.status}`);
+    }
+  } catch(e) {
+    setSyncStatus('err', 'Fehler beim Speichern', e.message);
+    alert('Fehler beim Speichern: ' + e.message + '\n\nTipp: Stelle sicher, dass der App-Passcode korrekt ist.');
+  }
+}
+
+// ── LOCAL DB ──
+function loadLocalDB() {
+  const raw = localStorage.getItem('lerncoach_db');
+  if (raw) { try { db = JSON.parse(raw); } catch(e) {} }
+}
+function saveLocalDB() {
+  localStorage.setItem('lerncoach_db', JSON.stringify(db));
+}
+
+// ── RENDER ──
+function renderGrid() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const grid = document.getElementById('grid');
+  const filtered = db.students.filter(s => s.name.toLowerCase().includes(q) || (s.klasse||'').toLowerCase().includes(q));
+  grid.innerHTML = '';
+
+  if (filtered.length === 0 && db.students.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="big">👤</div><p>Noch keine Schüler:innen.<br>Oben auf „+ Schüler:in hinzufügen" klicken.</p></div>`;
+  }
+
+  filtered.forEach(s => {
+    const last = s.sessions?.length ? s.sessions[s.sessions.length-1] : null;
+    const vals = last ? last.values : null;
+    const avg = vals ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '–';
+    const ci = db.students.indexOf(s) % COLORS.length;
+    const initials = s.name.split(',').map(p=>p.trim()[0]||'?').reverse().join('').slice(0,2).toUpperCase();
+
+    const card = document.createElement('div');
+    card.className = 'student-card' + (!last ? ' no-session' : '');
+    card.onclick = () => window.location.href = `lernrad.html?id=${s.id}`;
+    card.innerHTML = `
+      <div class="sc-top">
+        <div class="sc-avatar" style="background:${COLORS[ci]}">${initials}</div>
+        <div>
+          <div class="sc-name">${s.name}</div>
+          <div class="sc-class">${s.klasse||'Klasse –'} · ${s.sessions?.length||0} Gespräch${(s.sessions?.length||0)!==1?'e':''}</div>
+        </div>
+      </div>
+      <div class="sc-mini-wheel">
+        ${SEG_COLORS.map((c,i)=>`<div class="sc-mini-seg" style="background:${vals?c:'#e8e2da'};opacity:${vals?(vals[i]/10+0.2):1}"></div>`).join('')}
+      </div>
+      <div class="sc-meta">
+        <div>
+          <div class="sc-avg">${avg}</div>
+          <div style="font-size:9px;color:var(--light);">${last?'Zuletzt: '+last.date:'Noch kein Gespräch'}</div>
+        </div>
+        <button class="btn btn-warn btn-sm" onclick="event.stopPropagation();deleteStudent('${s.id}')">Entfernen</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const addCard = document.createElement('div');
+  addCard.className = 'add-card';
+  addCard.onclick = openAddModal;
+  addCard.innerHTML = `<div class="add-icon">＋</div><div class="add-label">Schüler:in hinzufügen</div>`;
+  grid.appendChild(addCard);
+}
+
+// ── STUDENTS ──
+function openAddModal() {
+  document.getElementById('modalAdd').classList.add('open');
+  setTimeout(()=>document.getElementById('mName').focus(), 100);
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function addStudent() {
+  const name = document.getElementById('mName').value.trim();
+  if (!name) { document.getElementById('mName').focus(); return; }
+  const klasse = document.getElementById('mClass').value.trim();
+  const id = 'sc_' + Date.now();
+  db.students.push({ id, name, klasse, sessions: [], createdAt: new Date().toISOString() });
+  saveLocalDB();
+  closeModal('modalAdd');
+  document.getElementById('mName').value = '';
+  document.getElementById('mClass').value = '';
+  renderGrid();
+  // Auto-sync if connected
+  if (getCreds().url) syncToNextcloud();
+}
+
+function deleteStudent(id) {
+  const s = db.students.find(s=>s.id===id);
+  if (!s || !confirm(`„${s.name}" wirklich entfernen?`)) return;
+  db.students = db.students.filter(s=>s.id!==id);
+  saveLocalDB();
+  renderGrid();
+  if (getCreds().url) syncToNextcloud();
+}
+
+// ── SETTINGS ──
+function openSettings() {
+  const { url, pass, file } = getCreds();
+  document.getElementById('wdavUrl').value = url;
+  document.getElementById('wdavPass').value = pass;
+  document.getElementById('wdavFile').value = file || 'lerncoaching.json';
+  if (url) {
+    document.getElementById('wdavStatusText').textContent = 'Gespeicherte Verbindung vorhanden';
+    document.getElementById('wdavStatus').querySelector('span').textContent = '✅';
+  }
+  document.getElementById('modalSettings').classList.add('open');
+}
+
+// Keyboard
+document.getElementById('mName').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('mClass').focus(); });
+document.getElementById('mClass').addEventListener('keydown', e=>{ if(e.key==='Enter') addStudent(); });
+document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e=>{ if(e.target===bg) bg.classList.remove('open'); }));
+
+// ── INIT ──
+function init() {
+  loadLocalDB();
+  const { url } = getCreds();
+  if (url) {
+    setSyncStatus('warn', 'Nextcloud konfiguriert', 'Klick auf ↓ Laden für aktuelle Daten');
+    document.getElementById('loadBtn').style.display = '';
+    document.getElementById('saveBtn').style.display = '';
+    // Auto-load on startup
+    syncFromNextcloud();
+  }
+  renderGrid();
+}
+
+init();
+</script>
+</body>
+</html>

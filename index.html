@@ -240,17 +240,17 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
 </div>
 
 <script>
-const BASE_URL = 'https://st-bauer.github.io/Lernrad/lerncoaching_hilfskarten_hell.html';
+const BASE_URL = 'https://st-bauer.github.io/Lernrad/';
 
 const SEGMENTS = [
-  { label: "Motivation",                sub: "Ich bin motiviert und gehe gerne an meine Aufgaben.",    color: "#2d5c4e", short: "Motivation",     anchor: "#karte-motivation" },
-  { label: "Ich plane meinen Tag",      sub: "Ich weiß, was ich wann mache – und halte mich daran.",   color: "#3a7a5c", short: "Planung",         anchor: "#karte-planung" },
-  { label: "Wenn's schwierig wird",     sub: "Ich bleibe dran, auch wenn etwas nicht sofort klappt.",  color: "#4a9468", short: "Durchhalten",     anchor: "#karte-durchhalten" },
-  { label: "Ich lerne clever",          sub: "Ich nutze Strategien, die wirklich zu mir passen.",      color: "#6aab7a", short: "Clever lernen",   anchor: "#karte-clever" },
-  { label: "Konzentriert bleiben",      sub: "Ich schaffe es, fokussiert zu arbeiten.",                 color: "#c4622d", short: "Fokus",           anchor: "#karte-fokus" },
-  { label: "Wie's mir geht",            sub: "Ich fühle mich gut genug, um lernen zu können.",         color: "#d4834a", short: "Wohlbefinden",    anchor: "#karte-wohlbefinden" },
-  { label: "Mit anderen",               sub: "Mit Mitschüler:innen und Lehrkräften läuft es gut.",     color: "#7a5c8a", short: "Miteinander",     anchor: "#karte-miteinander" },
-  { label: "Ich kenne meine Stärken",   sub: "Ich weiß, was ich gut kann – und setze es ein.",        color: "#4a6888", short: "Stärken",          anchor: "#karte-staerken" },
+  { label: "Motivation",                sub: "Ich bin motiviert und gehe gerne an meine Aufgaben.",    color: "#2d5c4e", short: "Motivation",     anchor: "karte-motivation.html" },
+  { label: "Ich plane meinen Tag",      sub: "Ich weiß, was ich wann mache – und halte mich daran.",   color: "#3a7a5c", short: "Planung",         anchor: "karte-planung.html" },
+  { label: "Wenn's schwierig wird",     sub: "Ich bleibe dran, auch wenn etwas nicht sofort klappt.",  color: "#4a9468", short: "Durchhalten",     anchor: "karte-durchhalten.html" },
+  { label: "Ich lerne clever",          sub: "Ich nutze Strategien, die wirklich zu mir passen.",      color: "#6aab7a", short: "Clever lernen",   anchor: "karte-clever.html" },
+  { label: "Konzentriert bleiben",      sub: "Ich schaffe es, fokussiert zu arbeiten.",                 color: "#c4622d", short: "Fokus",           anchor: "karte-fokus.html" },
+  { label: "Wie's mir geht",            sub: "Ich fühle mich gut genug, um lernen zu können.",         color: "#d4834a", short: "Wohlbefinden",    anchor: "karte-wohlbefinden.html" },
+  { label: "Mit anderen",               sub: "Mit Mitschüler:innen und Lehrkräften läuft es gut.",     color: "#7a5c8a", short: "Miteinander",     anchor: "karte-miteinander.html" },
+  { label: "Ich kenne meine Stärken",   sub: "Ich weiß, was ich gut kann – und setze es ein.",        color: "#4a6888", short: "Stärken",          anchor: "karte-staerken.html" },
 ];
 
 let values = new Array(SEGMENTS.length).fill(5);
@@ -270,7 +270,7 @@ SEGMENTS.forEach((seg, i) => {
   row.className = 'slider-row';
   row.id = `row-${i}`;
 
-  const cardUrl = BASE_URL + seg.anchor;
+  const cardUrl = BASE_URL + seg.anchor; // e.g. https://st-bauer.github.io/Lernrad/karte-motivation.html
   const hintId = `hint-${i}`;
   const qrId   = `qr-${i}`;
 

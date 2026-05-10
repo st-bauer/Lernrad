@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernrad – Lerncoaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f4ef; --ink: #1c1a17; --mid: #5c5650;
+  --light: #a09890; --rule: #ddd8d0; --accent: #2d5c4e; --cream: #ede9e2;
+}
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--ink); }
+.app { max-width: 940px; margin: 0 auto; padding: 32px 24px 60px; }
+.header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 28px; }
+.eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
+h1 { font-family: 'Fraunces', serif; font-weight: 300; font-size: 34px; line-height: 1; }
+h1 em { font-style: italic; color: var(--accent); }
+.meta-fields { display: flex; gap: 20px; align-items: flex-end; }
+.meta-field { display: flex; flex-direction: column; gap: 3px; }
+.meta-field label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--light); }
+.meta-field input { background: none; border: none; border-bottom: 1px solid var(--rule); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); padding: 3px 0; width: 120px; outline: none; }
+.meta-field input:focus { border-bottom-color: var(--accent); }
+.main { display: grid; grid-template-columns: 460px 1fr; gap: 36px; align-items: start; }
+.wheel-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+canvas#wheel { width: 100%; max-width: 460px; height: auto; filter: drop-shadow(0 6px 24px rgba(45,92,78,0.13)); }
+.score-bar { width: 100%; display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: white; border-radius: 6px; border: 1px solid var(--rule); }
+.score-num { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 600; color: var(--accent); line-height: 1; }
+.score-label { font-size: 11px; color: var(--mid); line-height: 1.5; }
+.score-label strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 1px; }
+.notes-section { width: 100%; margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 16px; }
+.notes-section h3 { font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--light); margin-bottom: 10px; }
+.note-field { margin-bottom: 10px; }
+.note-field label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.note-field textarea { width: 100%; background: white; border: 1px solid var(--rule); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 8px 10px; resize: none; outline: none; line-height: 1.5; }
+.note-field textarea:focus { border-color: var(--accent); }
+.actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.btn { padding: 9px 18px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #235048; }
+.btn-secondary { background: none; border: 1.5px solid var(--rule); color: var(--mid); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.sliders { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
+.slider-row { border-radius: 8px; padding: 10px 12px 8px; transition: background 0.15s; }
+.slider-row:hover { background: white; }
+.slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+.slider-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.slider-sublabel { font-size: 10.5px; color: var(--light); font-style: italic; margin-bottom: 5px; padding-left: 17px; }
+.val { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; min-width: 22px; text-align: right; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--rule); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: white; border: 2.5px solid currentColor; cursor: pointer; transition: transform 0.1s; }
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+.scale-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--light); margin-top: 3px; padding: 0 1px; }
+@media print {
+  body { background: white; }
+  .app { padding: 12px; }
+  .actions, .no-print { display: none !important; }
+  .main { grid-template-columns: 420px 1fr; gap: 20px; }
+  .slider-row:hover { background: transparent; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <span class="eyebrow">Lerncoaching · Jahrgangsstufe 7–8</span>
+      <h1>Mein Lern<em>rad</em></h1>
+    </div>
+    <div class="meta-fields">
+      <div class="meta-field"><label>Name</label><input type="text" id="nameInput" placeholder="Schüler:in"></div>
+      <div class="meta-field"><label>Datum</label><input type="text" id="dateInput"></div>
+      <div class="meta-field"><label>Gespräch Nr.</label><input type="text" id="numInput" placeholder="1" style="width:60px"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div>
+      <div class="wheel-wrap">
+        <canvas id="wheel" width="460" height="460"></canvas>
+      </div>
+      <div class="score-bar">
+        <div class="score-num" id="avgScore">–</div>
+        <div class="score-label">
+          <strong id="avgLabel">Gesamtbild</strong>
+          Durchschnitt · Skala 1–10
+        </div>
+      </div>
+      <div class="notes-section">
+        <h3>Gesprächsnotizen</h3>
+        <div class="note-field">
+          <label>Was fällt auf?</label>
+          <textarea rows="2" placeholder="Beobachtungen, Themen …"></textarea>
+        </div>
+        <div class="note-field">
+          <label>Vorhaben bis zum nächsten Gespräch</label>
+          <textarea rows="2" placeholder="Konkretes Vorhaben …"></textarea>
+        </div>
+      </div>
+      <div class="actions no-print">
+        <button class="btn btn-primary" onclick="window.print()">🖨 Drucken / PDF</button>
+        <button class="btn btn-secondary" onclick="resetAll()">Zurücksetzen</button>
+      </div>
+    </div>
+
+    <div class="sliders" id="sliders"></div>
+  </div>
+</div>
+
+<script>
+const SEGMENTS = [
+  { label: "Motivation",               sub: "Ich bin motiviert und gehe gerne an meine Aufgaben.",       color: "#2d5c4e", short: "Motivation" },
+  { label: "Ich plane meinen Tag",    sub: "Ich weiß, was ich wann mache – und halte mich daran.",      color: "#3a7a5c", short: "Planung" },
+  { label: "Wenn's schwierig wird",   sub: "Ich bleibe dran, auch wenn etwas nicht sofort klappt.",     color: "#4a9468", short: "Durchhalten" },
+  { label: "Ich lerne clever",        sub: "Ich nutze Strategien, die wirklich zu mir passen.",         color: "#6aab7a", short: "Clever lernen" },
+  { label: "Konzentriert bleiben",    sub: "Ich schaffe es, fokussiert zu arbeiten.",                   color: "#c4622d", short: "Fokus" },
+  { label: "Wie's mir geht",          sub: "Ich fühle mich gut genug, um lernen zu können.",            color: "#d4834a", short: "Wohlbefinden" },
+  { label: "Mit anderen",             sub: "Mit Mitschüler:innen und Lehrkräften läuft es gut.",        color: "#7a5c8a", short: "Miteinander" },
+  { label: "Ich kenne meine Stärken", sub: "Ich weiß, was ich gut kann – und setze es ein.",           color: "#4a6888", short: "Stärken" },
+];
+
+let values = new Array(SEGMENTS.length).fill(5);
+
+const slidersEl = document.getElementById('sliders');
+SEGMENTS.forEach((seg, i) => {
+  const row = document.createElement('div');
+  row.className = 'slider-row';
+  row.innerHTML = `
+    <div class="slider-top">
+      <div class="slider-label">
+        <span class="dot" style="background:${seg.color}"></span>
+        ${seg.label}
+      </div>
+      <div class="val" id="val-${i}" style="color:${seg.color}">5</div>
+    </div>
+    <div class="slider-sublabel">${seg.sub}</div>
+    <input type="range" min="1" max="10" value="5"
+      style="accent-color:${seg.color}"
+      oninput="update(${i}, this.value)">
+    <div class="scale-labels"><span>1 – kaum</span><span>10 – super</span></div>
+  `;
+  slidersEl.appendChild(row);
+});
+
+function update(i, v) {
+  values[i] = parseInt(v);
+  document.getElementById(`val-${i}`).textContent = v;
+  drawWheel(); updateScore();
+}
+
+function updateScore() {
+  const avg = (values.reduce((a,b)=>a+b,0)/values.length).toFixed(1);
+  document.getElementById('avgScore').textContent = avg;
+  document.getElementById('avgLabel').textContent =
+    avg >= 7.5 ? "Stark aufgestellt 💪" : avg >= 5 ? "Solide Basis 👍" : "Luft nach oben 🌱";
+}
+
+function resetAll() {
+  values = new Array(SEGMENTS.length).fill(5);
+  document.querySelectorAll('input[type=range]').forEach(r => r.value = 5);
+  SEGMENTS.forEach((_, i) => document.getElementById(`val-${i}`).textContent = 5);
+  document.querySelectorAll('textarea').forEach(t => t.value = '');
+  document.getElementById('nameInput').value = '';
+  document.getElementById('numInput').value = '';
+  drawWheel(); updateScore();
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, maxR = W*0.40;
+  const n = SEGMENTS.length, step = (Math.PI*2)/n, off = -Math.PI/2;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Outer ring
+  ctx.beginPath(); ctx.arc(cx, cy, maxR+6, 0, Math.PI*2);
+  ctx.fillStyle = '#f0ece5'; ctx.fill();
+
+  // Grid
+  for (let r = 1; r <= 10; r++) {
+    const radius = (r/10)*maxR;
+    ctx.beginPath();
+    for (let s = 0; s < n; s++) {
+      const a = off+s*step, x = cx+radius*Math.cos(a), y = cy+radius*Math.sin(a);
+      s===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = r===10 ? '#c8c0b8' : r===5 ? '#d4cec8' : '#e8e4de';
+    ctx.lineWidth = r===10 ? 1.5 : r===5 ? 1 : 0.6;
+    ctx.stroke();
+  }
+
+  // Spokes
+  for (let s = 0; s < n; s++) {
+    const a = off+s*step;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+maxR*Math.cos(a), cy+maxR*Math.sin(a));
+    ctx.strokeStyle = '#ddd8d0'; ctx.lineWidth = 0.8; ctx.stroke();
+  }
+
+  // Segment fills
+  for (let s = 0; s < n; s++) {
+    const a1=off+s*step, a2=off+(s+1)*step, r=(values[s]/10)*maxR;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,a1,a2); ctx.closePath();
+    ctx.fillStyle = SEGMENTS[s].color+'22'; ctx.fill();
+  }
+
+  // Main polygon
+  ctx.beginPath();
+  for (let s = 0; s < n; s++) {
+    const a=off+s*step, r=(values[s]/10)*maxR;
+    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    s===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  const grd = ctx.createRadialGradient(cx,cy,0,cx,cy,maxR);
+  grd.addColorStop(0,'rgba(45,92,78,0.55)');
+  grd.addColorStop(1,'rgba(45,92,78,0.10)');
+  ctx.fillStyle = grd; ctx.fill();
+  ctx.strokeStyle = '#2d5c4e'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Dots
+  for (let s = 0; s < n; s++) {
+    const a=off+s*step, r=(values[s]/10)*maxR;
+    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    ctx.beginPath(); ctx.arc(x,y,5.5,0,Math.PI*2);
+    ctx.fillStyle=SEGMENTS[s].color; ctx.fill();
+    ctx.strokeStyle='white'; ctx.lineWidth=2; ctx.stroke();
+  }
+
+  // Labels
+  const labelR = maxR+26;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  for (let s = 0; s < n; s++) {
+    const a=off+s*step;
+    const x=cx+labelR*Math.cos(a), y=cy+labelR*Math.sin(a);
+    ctx.font='bold 10.5px DM Sans, sans-serif';
+    ctx.fillStyle=SEGMENTS[s].color;
+    ctx.fillText(SEGMENTS[s].short, x, y);
+  }
+
+  // Center avg
+  const avg = (values.reduce((a,b)=>a+b,0)/values.length).toFixed(1);
+  ctx.beginPath(); ctx.arc(cx,cy,20,0,Math.PI*2);
+  ctx.fillStyle='#2d5c4e'; ctx.fill();
+  ctx.font='bold 13px Fraunces, serif';
+  ctx.fillStyle='white'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(avg, cx, cy);
+}
+
+const today = new Date();
+document.getElementById('dateInput').value =
+  `${String(today.getDate()).padStart(2,'0')}.${String(today.getMonth()+1).padStart(2,'0')}.${today.getFullYear()}`;
+
+drawWheel(); updateScore();
+</script>
+</body>
+</html>

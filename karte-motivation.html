@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfskarte: Motivation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #f7f4ef; }
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.card { width: 148mm; height: 105mm; border-radius: 8px; overflow: hidden; position: relative; background: white; box-shadow: 0 4px 32px rgba(0,0,0,0.12); }
+.card svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .overlay { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 55%, rgba(255,255,255,0.92) 100%); }
+.card .content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm 7mm 6mm; }
+.card .top-strip { position: absolute; top: 0; left: 0; right: 0; height: 7px; }
+.card-tag { font-size: 7px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a09888; margin-bottom: 3px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; line-height: 1.05; margin-bottom: 5px; }
+.card-divider { width: 28px; height: 2.5px; border-radius: 1px; margin-bottom: 7px; }
+.impulse-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.impulse-list li { display: flex; gap: 6px; font-size: 10px; line-height: 1.45; color: #2a2520; }
+.impulse-list li .arrow { font-size: 12px; flex-shrink: 0; font-weight: 600; }
+.card-mantra { margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 9px; font-style: italic; color: #7a7268; line-height: 1.4; }
+.nav { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #5c5650; text-decoration: none; padding: 6px 14px; border: 1.5px solid #ddd8d0; border-radius: 4px; background: white; }
+.nav a:hover { border-color: #2d5c4e; color: #2d5c4e; }
+.nav .back { color: #a09890; font-size: 10px; }
+@media print { body { background: white; padding: 0; } .nav { display: none; } .card { box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top-strip" style="background:#2d5c4e;"></div>
+  <svg class="bg" viewBox="0 0 560 397" xmlns="http://www.w3.org/2000/svg">
+    <rect width="560" height="397" fill="white"/>
+    <circle cx="460" cy="60" r="180" fill="#e8f4ee" opacity="1"/>
+    <circle cx="420" cy="30" r="110" fill="#d4ecdf" opacity="0.8"/>
+    <circle cx="500" cy="120" r="80" fill="#c0e4d0" opacity="0.5"/>
+    <path d="M60 397 Q90 300 110 220 Q135 130 120 40" stroke="#4a9468" stroke-width="2" fill="none" opacity="0.25"/>
+    <path d="M110 397 Q140 310 155 230 Q175 150 165 60" stroke="#2d5c4e" stroke-width="1.5" fill="none" opacity="0.18"/>
+    <circle cx="170" cy="90" r="4" fill="#4a9468" opacity="0.3"/>
+    <circle cx="210" cy="55" r="2.5" fill="#2d5c4e" opacity="0.25"/>
+    <circle cx="145" cy="130" r="2" fill="#6aab7a" opacity="0.3"/>
+    <path d="M390 200 L390 80 M368 104 L390 80 L412 104" stroke="#2d5c4e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.18"/>
+    <circle cx="390" cy="80" r="22" fill="#4a9468" opacity="0.12"/>
+    <circle cx="390" cy="80" r="10" fill="#2d5c4e" opacity="0.15"/>
+  </svg>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="card-tag">Lerncoaching · Hilfskarte</div>
+    <div class="card-title" style="color:#1a3a2a;">Motivation</div>
+    <div class="card-divider" style="background:#2d5c4e;"></div>
+    <ul class="impulse-list">
+      <li><span class="arrow" style="color:#2d5c4e">›</span><span>Starte mit der Aufgabe, die dir am meisten liegt – Schwung hilft mehr als Willensstärke.</span></li>
+      <li><span class="arrow" style="color:#2d5c4e">›</span><span>Schreib auf, warum du das lernst und wozu es dir später nützen könnte.</span></li>
+      <li><span class="arrow" style="color:#2d5c4e">›</span><span>Gönn dir eine kleine Belohnung nach einem erledigten Block – nicht davor.</span></li>
+    </ul>
+    <div class="card-mantra">Motivation kommt oft erst, wenn man anfängt – nicht davor.</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="karte-motivation.html" style="border-color:#2d5c4e;color:#2d5c4e;">Motivation</a>
+<a href="karte-planung.html" style="border-color:;color:;">Planung</a>
+<a href="karte-durchhalten.html" style="border-color:;color:;">Durchhalten</a>
+<a href="karte-clever.html" style="border-color:;color:;">Clever lernen</a>
+<a href="karte-fokus.html" style="border-color:;color:;">Fokus</a>
+<a href="karte-wohlbefinden.html" style="border-color:;color:;">Wohlbefinden</a>
+<a href="karte-miteinander.html" style="border-color:;color:;">Miteinander</a>
+<a href="karte-staerken.html" style="border-color:;color:;">Stärken</a>
+</nav>
+
+</body>
+</html>

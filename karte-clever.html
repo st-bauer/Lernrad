@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfskarte: Ich lerne clever</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #f7f4ef; }
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.card { width: 148mm; height: 105mm; border-radius: 8px; overflow: hidden; position: relative; background: white; box-shadow: 0 4px 32px rgba(0,0,0,0.12); }
+.card svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .overlay { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 55%, rgba(255,255,255,0.92) 100%); }
+.card .content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm 7mm 6mm; }
+.card .top-strip { position: absolute; top: 0; left: 0; right: 0; height: 7px; }
+.card-tag { font-size: 7px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a09888; margin-bottom: 3px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; line-height: 1.05; margin-bottom: 5px; }
+.card-divider { width: 28px; height: 2.5px; border-radius: 1px; margin-bottom: 7px; }
+.impulse-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.impulse-list li { display: flex; gap: 6px; font-size: 10px; line-height: 1.45; color: #2a2520; }
+.impulse-list li .arrow { font-size: 12px; flex-shrink: 0; font-weight: 600; }
+.card-mantra { margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 9px; font-style: italic; color: #7a7268; line-height: 1.4; }
+.nav { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #5c5650; text-decoration: none; padding: 6px 14px; border: 1.5px solid #ddd8d0; border-radius: 4px; background: white; }
+.nav a:hover { border-color: #2d5c4e; color: #2d5c4e; }
+.nav .back { color: #a09890; font-size: 10px; }
+@media print { body { background: white; padding: 0; } .nav { display: none; } .card { box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top-strip" style="background:#5a8a5a;"></div>
+  <svg class="bg" viewBox="0 0 560 397" xmlns="http://www.w3.org/2000/svg">
+    <rect width="560" height="397" fill="white"/>
+    <circle cx="300" cy="180" r="160" fill="#edf5ee" opacity="0.9"/>
+    <circle cx="300" cy="110" r="9" fill="#5a8a5a" opacity="0.3"/>
+    <circle cx="220" cy="155" r="7" fill="#4a7a4a" opacity="0.3"/>
+    <circle cx="380" cy="150" r="8" fill="#5a8a5a" opacity="0.3"/>
+    <circle cx="235" cy="225" r="7" fill="#4a7a4a" opacity="0.3"/>
+    <circle cx="365" cy="230" r="9" fill="#5a8a5a" opacity="0.3"/>
+    <circle cx="300" cy="265" r="8" fill="#4a7a4a" opacity="0.3"/>
+    <circle cx="175" cy="195" r="5" fill="#3a6a3a" opacity="0.25"/>
+    <circle cx="425" cy="200" r="6" fill="#4a7a4a" opacity="0.25"/>
+    <line x1="300" y1="110" x2="220" y2="155" stroke="#5a8a5a" stroke-width="1.5" opacity="0.2"/>
+    <line x1="300" y1="110" x2="380" y2="150" stroke="#5a8a5a" stroke-width="1.5" opacity="0.2"/>
+    <line x1="220" y1="155" x2="235" y2="225" stroke="#4a7a4a" stroke-width="1.5" opacity="0.2"/>
+    <line x1="380" y1="150" x2="365" y2="230" stroke="#4a7a4a" stroke-width="1.5" opacity="0.2"/>
+    <line x1="235" y1="225" x2="300" y2="265" stroke="#5a8a5a" stroke-width="1.5" opacity="0.2"/>
+    <line x1="365" y1="230" x2="300" y2="265" stroke="#5a8a5a" stroke-width="1.5" opacity="0.2"/>
+    <circle cx="300" cy="50" r="28" fill="#fff8d0" opacity="0.9"/>
+    <circle cx="300" cy="50" r="18" fill="#ffe870" opacity="0.4"/>
+    <path d="M292 44 Q300 33 308 44 Q313 51 308 58 L292 58 Q287 51 292 44Z" fill="#e8c820" opacity="0.5"/>
+    <rect x="295" y="59" width="10" height="4" rx="2" fill="#c8a810" opacity="0.4"/>
+  </svg>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="card-tag">Lerncoaching · Hilfskarte</div>
+    <div class="card-title" style="color:#1a3020;">Ich lerne clever</div>
+    <div class="card-divider" style="background:#5a8a5a;"></div>
+    <ul class="impulse-list">
+      <li><span class="arrow" style="color:#5a8a5a">›</span><span>Erkläre den Stoff laut – als ob du ihn jemandem beibringst. Wer erklärt, versteht.</span></li>
+      <li><span class="arrow" style="color:#5a8a5a">›</span><span>Lern in kurzen Einheiten (20 Min.) mit echten Pausen – statt stundenlang am Stück.</span></li>
+      <li><span class="arrow" style="color:#5a8a5a">›</span><span>Teste dich selbst: Deck deine Notizen ab und schreib das Wichtigste aus dem Kopf.</span></li>
+    </ul>
+    <div class="card-mantra">Länger lernen hilft weniger als schlauer lernen.</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="karte-motivation.html" style="border-color:;color:;">Motivation</a>
+<a href="karte-planung.html" style="border-color:;color:;">Planung</a>
+<a href="karte-durchhalten.html" style="border-color:;color:;">Durchhalten</a>
+<a href="karte-clever.html" style="border-color:#5a8a5a;color:#5a8a5a;">Clever lernen</a>
+<a href="karte-fokus.html" style="border-color:;color:;">Fokus</a>
+<a href="karte-wohlbefinden.html" style="border-color:;color:;">Wohlbefinden</a>
+<a href="karte-miteinander.html" style="border-color:;color:;">Miteinander</a>
+<a href="karte-staerken.html" style="border-color:;color:;">Stärken</a>
+</nav>
+
+</body>
+</html>

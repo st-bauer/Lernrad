@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfskarte: Wie's mir geht</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #f7f4ef; }
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.card { width: 148mm; height: 105mm; border-radius: 8px; overflow: hidden; position: relative; background: white; box-shadow: 0 4px 32px rgba(0,0,0,0.12); }
+.card svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .overlay { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 55%, rgba(255,255,255,0.92) 100%); }
+.card .content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm 7mm 6mm; }
+.card .top-strip { position: absolute; top: 0; left: 0; right: 0; height: 7px; }
+.card-tag { font-size: 7px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a09888; margin-bottom: 3px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; line-height: 1.05; margin-bottom: 5px; }
+.card-divider { width: 28px; height: 2.5px; border-radius: 1px; margin-bottom: 7px; }
+.impulse-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.impulse-list li { display: flex; gap: 6px; font-size: 10px; line-height: 1.45; color: #2a2520; }
+.impulse-list li .arrow { font-size: 12px; flex-shrink: 0; font-weight: 600; }
+.card-mantra { margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 9px; font-style: italic; color: #7a7268; line-height: 1.4; }
+.nav { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #5c5650; text-decoration: none; padding: 6px 14px; border: 1.5px solid #ddd8d0; border-radius: 4px; background: white; }
+.nav a:hover { border-color: #2d5c4e; color: #2d5c4e; }
+.nav .back { color: #a09890; font-size: 10px; }
+@media print { body { background: white; padding: 0; } .nav { display: none; } .card { box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top-strip" style="background:#b05030;"></div>
+  <svg class="bg" viewBox="0 0 560 397" xmlns="http://www.w3.org/2000/svg">
+    <rect width="560" height="397" fill="white"/>
+    <rect width="560" height="200" fill="#fff5ee" opacity="0.9"/>
+    <circle cx="430" cy="90" r="60" fill="#fff0c0" opacity="0.9"/>
+    <circle cx="430" cy="90" r="38" fill="#ffe090" opacity="0.5"/>
+    <circle cx="430" cy="90" r="20" fill="#f0c040" opacity="0.35"/>
+    <line x1="430" y1="20" x2="430" y2="8" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="430" y1="160" x2="430" y2="172" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="360" y1="90" x2="348" y2="90" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="500" y1="90" x2="512" y2="90" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="381" y1="41" x2="373" y2="33" stroke="#f0c040" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+    <line x1="479" y1="139" x2="487" y2="147" stroke="#f0c040" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+    <path d="M0 290 Q70 265 140 290 Q210 315 280 290 Q350 265 420 290 Q490 315 560 290 L560 397 L0 397Z" fill="#fde8d8" opacity="0.6"/>
+    <path d="M0 320 Q70 305 140 320 Q210 335 280 320 Q350 305 420 320 Q490 335 560 320 L560 397 L0 397Z" fill="#f8d8c0" opacity="0.5"/>
+    <path d="M110 195 C110 175 90 162 75 175 C60 188 60 208 110 238 C160 208 160 188 145 175 C130 162 110 175 110 195Z" fill="#e8806a" opacity="0.25"/>
+  </svg>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="card-tag">Lerncoaching · Hilfskarte</div>
+    <div class="card-title" style="color:#5a1800;">Wie's mir geht</div>
+    <div class="card-divider" style="background:#b05030;"></div>
+    <ul class="impulse-list">
+      <li><span class="arrow" style="color:#b05030">›</span><span>Sorg zuerst für die Basics: Schlaf, Essen, kurze Bewegung. Lernen klappt danach viel besser.</span></li>
+      <li><span class="arrow" style="color:#b05030">›</span><span>Schreib auf, was dich belastet – oft hilft das Aufschreiben schon, um Abstand zu gewinnen.</span></li>
+      <li><span class="arrow" style="color:#b05030">›</span><span>Sprich mit jemandem, dem du vertraust. Du musst das nicht alleine tragen.</span></li>
+    </ul>
+    <div class="card-mantra">Wer auf sich achtet, hat auch für anderes Kraft.</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="karte-motivation.html" style="border-color:;color:;">Motivation</a>
+<a href="karte-planung.html" style="border-color:;color:;">Planung</a>
+<a href="karte-durchhalten.html" style="border-color:;color:;">Durchhalten</a>
+<a href="karte-clever.html" style="border-color:;color:;">Clever lernen</a>
+<a href="karte-fokus.html" style="border-color:;color:;">Fokus</a>
+<a href="karte-wohlbefinden.html" style="border-color:#b05030;color:#b05030;">Wohlbefinden</a>
+<a href="karte-miteinander.html" style="border-color:;color:;">Miteinander</a>
+<a href="karte-staerken.html" style="border-color:;color:;">Stärken</a>
+</nav>
+
+</body>
+</html>

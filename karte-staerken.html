@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfskarte: Ich kenne meine Stärken</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #f7f4ef; }
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.card { width: 148mm; height: 105mm; border-radius: 8px; overflow: hidden; position: relative; background: white; box-shadow: 0 4px 32px rgba(0,0,0,0.12); }
+.card svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .overlay { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 55%, rgba(255,255,255,0.92) 100%); }
+.card .content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm 7mm 6mm; }
+.card .top-strip { position: absolute; top: 0; left: 0; right: 0; height: 7px; }
+.card-tag { font-size: 7px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a09888; margin-bottom: 3px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; line-height: 1.05; margin-bottom: 5px; }
+.card-divider { width: 28px; height: 2.5px; border-radius: 1px; margin-bottom: 7px; }
+.impulse-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.impulse-list li { display: flex; gap: 6px; font-size: 10px; line-height: 1.45; color: #2a2520; }
+.impulse-list li .arrow { font-size: 12px; flex-shrink: 0; font-weight: 600; }
+.card-mantra { margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 9px; font-style: italic; color: #7a7268; line-height: 1.4; }
+.nav { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #5c5650; text-decoration: none; padding: 6px 14px; border: 1.5px solid #ddd8d0; border-radius: 4px; background: white; }
+.nav a:hover { border-color: #2d5c4e; color: #2d5c4e; }
+.nav .back { color: #a09890; font-size: 10px; }
+@media print { body { background: white; padding: 0; } .nav { display: none; } .card { box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top-strip" style="background:#4a6888;"></div>
+  <svg class="bg" viewBox="0 0 560 397" xmlns="http://www.w3.org/2000/svg">
+    <rect width="560" height="397" fill="white"/>
+    <circle cx="300" cy="190" r="170" fill="#eaf0f8" opacity="0.9"/>
+    <polygon points="300,70 400,175 300,330 200,175" fill="#c0d4e8" opacity="0.25"/>
+    <polygon points="300,70 400,175 300,210 200,175" fill="#a8c0d8" opacity="0.3"/>
+    <polygon points="300,210 400,175 300,330" fill="#90adc8" opacity="0.2"/>
+    <polygon points="300,210 200,175 300,330" fill="#a0bcd4" opacity="0.2"/>
+    <line x1="300" y1="70" x2="300" y2="330" stroke="#4a6888" stroke-width="1" opacity="0.15"/>
+    <line x1="200" y1="175" x2="400" y2="175" stroke="#4a6888" stroke-width="1" opacity="0.15"/>
+    <line x1="300" y1="70" x2="200" y2="175" stroke="#4a6888" stroke-width="1" opacity="0.18"/>
+    <line x1="300" y1="70" x2="400" y2="175" stroke="#4a6888" stroke-width="1" opacity="0.18"/>
+    <path d="M100 80 L103 72 L106 80 L114 83 L106 86 L103 94 L100 86 L92 83Z" fill="#4a6888" opacity="0.3"/>
+    <path d="M460 230 L462 224 L464 230 L470 232 L464 234 L462 240 L460 234 L454 232Z" fill="#4a6888" opacity="0.25"/>
+    <path d="M440 60 L442 54 L444 60 L450 62 L444 64 L442 70 L440 64 L434 62Z" fill="#6a88a8" opacity="0.3"/>
+    <circle cx="300" cy="195" r="16" fill="#d0e4f4" opacity="0.6"/>
+    <circle cx="300" cy="195" r="6" fill="#4a6888" opacity="0.3"/>
+  </svg>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="card-tag">Lerncoaching · Hilfskarte</div>
+    <div class="card-title" style="color:#1a2838;">Ich kenne meine Stärken</div>
+    <div class="card-divider" style="background:#4a6888;"></div>
+    <ul class="impulse-list">
+      <li><span class="arrow" style="color:#4a6888">›</span><span>Schreib 3 Dinge auf, die dir in letzter Zeit gut gelungen sind – egal ob groß oder klein.</span></li>
+      <li><span class="arrow" style="color:#4a6888">›</span><span>Frag jemanden, der dich gut kennt, was sie oder er an dir besonders findet.</span></li>
+      <li><span class="arrow" style="color:#4a6888">›</span><span>Nutze deine Stärken bewusst – wer anderen erklärt, versteht es selbst noch besser.</span></li>
+    </ul>
+    <div class="card-mantra">Stärken wachsen, wenn man sie nutzt und benennt.</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="karte-motivation.html" style="border-color:;color:;">Motivation</a>
+<a href="karte-planung.html" style="border-color:;color:;">Planung</a>
+<a href="karte-durchhalten.html" style="border-color:;color:;">Durchhalten</a>
+<a href="karte-clever.html" style="border-color:;color:;">Clever lernen</a>
+<a href="karte-fokus.html" style="border-color:;color:;">Fokus</a>
+<a href="karte-wohlbefinden.html" style="border-color:;color:;">Wohlbefinden</a>
+<a href="karte-miteinander.html" style="border-color:;color:;">Miteinander</a>
+<a href="karte-staerken.html" style="border-color:#4a6888;color:#4a6888;">Stärken</a>
+</nav>
+
+</body>
+</html>

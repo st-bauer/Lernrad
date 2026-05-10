@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfskarte: Wenn's schwierig wird</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #f7f4ef; }
+html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.card { width: 148mm; height: 105mm; border-radius: 8px; overflow: hidden; position: relative; background: white; box-shadow: 0 4px 32px rgba(0,0,0,0.12); }
+.card svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card .overlay { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.55) 55%, rgba(255,255,255,0.92) 100%); }
+.card .content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 6mm 7mm 6mm; }
+.card .top-strip { position: absolute; top: 0; left: 0; right: 0; height: 7px; }
+.card-tag { font-size: 7px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a09888; margin-bottom: 3px; }
+.card-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; line-height: 1.05; margin-bottom: 5px; }
+.card-divider { width: 28px; height: 2.5px; border-radius: 1px; margin-bottom: 7px; }
+.impulse-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.impulse-list li { display: flex; gap: 6px; font-size: 10px; line-height: 1.45; color: #2a2520; }
+.impulse-list li .arrow { font-size: 12px; flex-shrink: 0; font-weight: 600; }
+.card-mantra { margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 9px; font-style: italic; color: #7a7268; line-height: 1.4; }
+.nav { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #5c5650; text-decoration: none; padding: 6px 14px; border: 1.5px solid #ddd8d0; border-radius: 4px; background: white; }
+.nav a:hover { border-color: #2d5c4e; color: #2d5c4e; }
+.nav .back { color: #a09890; font-size: 10px; }
+@media print { body { background: white; padding: 0; } .nav { display: none; } .card { box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top-strip" style="background:#4a9468;"></div>
+  <svg class="bg" viewBox="0 0 560 397" xmlns="http://www.w3.org/2000/svg">
+    <rect width="560" height="397" fill="white"/>
+    <rect width="560" height="220" fill="#edf7f2" opacity="0.8"/>
+    <path d="M0 397 L130 200 L220 300 L330 100 L450 240 L560 160 L560 397 Z" fill="#d0eadb" opacity="0.9"/>
+    <path d="M0 397 L90 280 L200 340 L300 180 L400 300 L500 220 L560 260 L560 397 Z" fill="#e8f4ee" opacity="0.8"/>
+    <circle cx="330" cy="100" r="10" fill="#4a9468" opacity="0.5"/>
+    <path d="M70 397 Q140 330 200 290 Q260 250 295 190 Q310 150 330 100" stroke="#4a9468" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.4"/>
+    <circle cx="250" cy="258" r="5" fill="#2d5c4e" opacity="0.4"/>
+    <line x1="250" y1="263" x2="250" y2="278" stroke="#2d5c4e" stroke-width="1.5" opacity="0.4"/>
+    <path d="M244 271 L250 278 L256 271" stroke="#2d5c4e" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+    <circle cx="460" cy="70" r="35" fill="#fff8e0" opacity="0.9"/>
+    <circle cx="460" cy="70" r="25" fill="#ffe070" opacity="0.3"/>
+    <line x1="460" y1="25" x2="460" y2="15" stroke="#e8c840" stroke-width="2" opacity="0.3"/>
+    <line x1="460" y1="115" x2="460" y2="125" stroke="#e8c840" stroke-width="2" opacity="0.3"/>
+    <line x1="415" y1="70" x2="405" y2="70" stroke="#e8c840" stroke-width="2" opacity="0.3"/>
+    <line x1="505" y1="70" x2="515" y2="70" stroke="#e8c840" stroke-width="2" opacity="0.3"/>
+  </svg>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="card-tag">Lerncoaching · Hilfskarte</div>
+    <div class="card-title" style="color:#1a3a2a;">Wenn's schwierig wird</div>
+    <div class="card-divider" style="background:#4a9468;"></div>
+    <ul class="impulse-list">
+      <li><span class="arrow" style="color:#4a9468">›</span><span>Teile die schwierige Aufgabe in winzige Schritte – und mach nur den ersten.</span></li>
+      <li><span class="arrow" style="color:#4a9468">›</span><span>Erinnere dich an etwas, das du früher nicht konntest und jetzt kannst. Das hast du auch gelernt.</span></li>
+      <li><span class="arrow" style="color:#4a9468">›</span><span>Sag dir: Ich muss das nicht perfekt machen – ich muss es nur anfangen.</span></li>
+    </ul>
+    <div class="card-mantra">Schwierig bedeutet: Du wächst gerade.</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="karte-motivation.html" style="border-color:;color:;">Motivation</a>
+<a href="karte-planung.html" style="border-color:;color:;">Planung</a>
+<a href="karte-durchhalten.html" style="border-color:#4a9468;color:#4a9468;">Durchhalten</a>
+<a href="karte-clever.html" style="border-color:;color:;">Clever lernen</a>
+<a href="karte-fokus.html" style="border-color:;color:;">Fokus</a>
+<a href="karte-wohlbefinden.html" style="border-color:;color:;">Wohlbefinden</a>
+<a href="karte-miteinander.html" style="border-color:;color:;">Miteinander</a>
+<a href="karte-staerken.html" style="border-color:;color:;">Stärken</a>
+</nav>
+
+</body>
+</html>

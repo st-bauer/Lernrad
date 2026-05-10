@@ -5,45 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lernrad – Lerncoaching</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #f7f4ef; --ink: #1c1a17; --mid: #5c5650;
   --light: #a09890; --rule: #ddd8d0; --accent: #2d5c4e; --cream: #ede9e2;
+  --warn: #c4622d;
 }
 html, body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--ink); }
-.app { max-width: 940px; margin: 0 auto; padding: 32px 24px 60px; }
-.header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 28px; }
+.app { max-width: 1020px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* HEADER */
+.header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
 .eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
 h1 { font-family: 'Fraunces', serif; font-weight: 300; font-size: 34px; line-height: 1; }
 h1 em { font-style: italic; color: var(--accent); }
-.meta-fields { display: flex; gap: 20px; align-items: flex-end; }
+.meta-fields { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
 .meta-field { display: flex; flex-direction: column; gap: 3px; }
 .meta-field label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--light); }
 .meta-field input { background: none; border: none; border-bottom: 1px solid var(--rule); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); padding: 3px 0; width: 120px; outline: none; }
 .meta-field input:focus { border-bottom-color: var(--accent); }
+
+/* THRESHOLD SETTING */
+.threshold-bar { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid var(--rule); border-radius: 6px; padding: 8px 14px; margin-bottom: 20px; flex-wrap: wrap; }
+.threshold-bar label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); white-space: nowrap; }
+.threshold-bar input[type=range] { width: 120px; accent-color: var(--warn); }
+.threshold-val { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--warn); min-width: 18px; }
+.threshold-bar .hint { font-size: 10px; color: var(--light); font-style: italic; }
+
+/* MAIN LAYOUT */
 .main { display: grid; grid-template-columns: 460px 1fr; gap: 36px; align-items: start; }
+
+/* WHEEL */
 .wheel-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 canvas#wheel { width: 100%; max-width: 460px; height: auto; filter: drop-shadow(0 6px 24px rgba(45,92,78,0.13)); }
 .score-bar { width: 100%; display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: white; border-radius: 6px; border: 1px solid var(--rule); }
 .score-num { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 600; color: var(--accent); line-height: 1; }
 .score-label { font-size: 11px; color: var(--mid); line-height: 1.5; }
 .score-label strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 1px; }
-.notes-section { width: 100%; margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 16px; }
-.notes-section h3 { font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--light); margin-bottom: 10px; }
+
+/* NOTES */
+.notes-section { width: 100%; margin-top: 16px; }
+.notes-section-title {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--light);
+  border-top: 1px solid var(--rule); padding-top: 14px; margin-bottom: 12px;
+}
 .note-field { margin-bottom: 10px; }
 .note-field label { display: block; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
-.note-field textarea { width: 100%; background: white; border: 1px solid var(--rule); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 8px 10px; resize: none; outline: none; line-height: 1.5; }
+.note-field textarea { width: 100%; background: white; border: 1px solid var(--rule); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 8px 10px; resize: none; outline: none; line-height: 1.5; transition: border-color .15s; }
 .note-field textarea:focus { border-color: var(--accent); }
+
+/* Private coach note */
+.note-field.private label { color: var(--mid); }
+.note-field.private textarea { background: #fdf8f0; border-style: dashed; font-style: italic; }
+
+/* Vereinbarung box */
+.vereinbarung-box { background: white; border: 1px solid var(--rule); border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+.vereinbarung-box .vb-label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; display: block; }
+.vereinbarung-box textarea { width: 100%; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 8px 10px; resize: none; outline: none; line-height: 1.5; margin-bottom: 8px; }
+.vereinbarung-box textarea:focus { border-color: var(--accent); }
+.vb-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.vb-meta-field { display: flex; flex-direction: column; gap: 2px; }
+.vb-meta-field label { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--light); }
+.vb-meta-field input { background: none; border: none; border-bottom: 1px solid var(--rule); font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); padding: 2px 0; width: 80px; outline: none; }
+.vb-meta-field input:focus { border-bottom-color: var(--accent); }
+.zuversicht-field { display: flex; flex-direction: column; gap: 2px; }
+.zuversicht-field label { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--light); }
+.zuversicht-row { display: flex; align-items: center; gap: 8px; }
+.zuversicht-row input[type=range] { width: 80px; accent-color: var(--accent); }
+.zuversicht-num { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--accent); min-width: 18px; }
+
+/* ACTIONS */
 .actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 .btn { padding: 9px 18px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
 .btn-primary { background: var(--accent); color: white; }
 .btn-primary:hover { background: #235048; }
 .btn-secondary { background: none; border: 1.5px solid var(--rule); color: var(--mid); }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+/* SLIDERS */
 .sliders { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
-.slider-row { border-radius: 8px; padding: 10px 12px 8px; transition: background 0.15s; }
+.slider-row { border-radius: 8px; padding: 10px 12px 8px; transition: background 0.15s; border: 1.5px solid transparent; }
 .slider-row:hover { background: white; }
+.slider-row.low { background: #fff8f5; border-color: #f0d0c0; }
 .slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
 .slider-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
 .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
@@ -53,17 +99,46 @@ input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; hei
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: white; border: 2.5px solid currentColor; cursor: pointer; transition: transform 0.1s; }
 input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
 .scale-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--light); margin-top: 3px; padding: 0 1px; }
+
+/* CARD HINT */
+.card-hint {
+  display: none;
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fff8f5;
+  border-radius: 5px;
+  border-left: 3px solid var(--warn);
+  align-items: flex-start;
+  gap: 10px;
+}
+.card-hint.visible { display: flex; }
+.card-hint-text { font-size: 10px; color: var(--mid); line-height: 1.4; flex: 1; }
+.card-hint-text strong { display: block; color: var(--warn); font-size: 10px; margin-bottom: 2px; }
+.card-hint-link { font-size: 10px; color: var(--accent); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.card-hint-link:hover { text-decoration: underline; }
+.qr-wrap { flex-shrink: 0; }
+.qr-wrap canvas, .qr-wrap img { width: 52px !important; height: 52px !important; display: block; border-radius: 3px; }
+
+/* RECOMMENDATIONS PANEL (below sliders) */
+.reco-panel { margin-top: 20px; display: none; }
+.reco-panel.visible { display: block; }
+.reco-panel-title { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--warn); margin-bottom: 10px; border-top: 1px solid #f0d0c0; padding-top: 12px; }
+
 @media print {
   body { background: white; }
   .app { padding: 12px; }
   .actions, .no-print { display: none !important; }
-  .main { grid-template-columns: 420px 1fr; gap: 20px; }
+  .main { grid-template-columns: 400px 1fr; gap: 20px; }
   .slider-row:hover { background: transparent; }
+  .threshold-bar { display: none; }
+  .card-hint { display: flex !important; }
 }
 </style>
 </head>
 <body>
 <div class="app">
+
+  <!-- HEADER -->
   <div class="header">
     <div>
       <span class="eyebrow">Lerncoaching · Jahrgangsstufe 7–8</span>
@@ -76,11 +151,23 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
     </div>
   </div>
 
+  <!-- THRESHOLD -->
+  <div class="threshold-bar no-print">
+    <label>Hilfskarte ab Wert ≤</label>
+    <input type="range" id="thresholdSlider" min="1" max="6" value="4" oninput="setThreshold(this.value)">
+    <span class="threshold-val" id="thresholdVal">4</span>
+    <span class="hint">Bereiche unter diesem Wert erhalten automatisch einen Kartenvorschlag.</span>
+  </div>
+
+  <!-- MAIN -->
   <div class="main">
+
+    <!-- LEFT: WHEEL + NOTES -->
     <div>
       <div class="wheel-wrap">
         <canvas id="wheel" width="460" height="460"></canvas>
       </div>
+
       <div class="score-bar">
         <div class="score-num" id="avgScore">–</div>
         <div class="score-label">
@@ -88,45 +175,105 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
           Durchschnitt · Skala 1–10
         </div>
       </div>
+
+      <!-- COACHING NOTES -->
       <div class="notes-section">
-        <h3>Gesprächsnotizen</h3>
+        <div class="notes-section-title">Gesprächsprotokoll</div>
+
         <div class="note-field">
-          <label>Was fällt auf?</label>
-          <textarea rows="2" placeholder="Beobachtungen, Themen …"></textarea>
+          <label>✦ Was lief gut seit dem letzten Gespräch?</label>
+          <textarea rows="2" placeholder="Erfolge, Fortschritte, positive Momente …"></textarea>
         </div>
+
         <div class="note-field">
-          <label>Vorhaben bis zum nächsten Gespräch</label>
-          <textarea rows="2" placeholder="Konkretes Vorhaben …"></textarea>
+          <label>◎ Auffälliger Bereich heute</label>
+          <textarea rows="1" placeholder="Welcher Bereich war Thema im Gespräch?"></textarea>
         </div>
+
+        <div class="note-field">
+          <label>★ Stärke des Gesprächs</label>
+          <textarea rows="2" placeholder="Was hat diese Person heute gut gemacht, erkannt oder gesagt?"></textarea>
+        </div>
+
+        <!-- VEREINBARUNG -->
+        <div class="vereinbarung-box">
+          <span class="vb-label">→ Vereinbarung</span>
+          <textarea rows="2" placeholder="Was genau wird bis zum nächsten Gespräch umgesetzt?"></textarea>
+          <div class="vb-meta">
+            <div class="vb-meta-field">
+              <label>Bis wann</label>
+              <input type="text" placeholder="Datum / KW">
+            </div>
+            <div class="zuversicht-field">
+              <label>Zuversicht (1–10)</label>
+              <div class="zuversicht-row">
+                <input type="range" min="1" max="10" value="7" oninput="document.getElementById('zvNum').textContent=this.value">
+                <span class="zuversicht-num" id="zvNum">7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-field private">
+          <label>🔒 Meine Beobachtung (nur für mich)</label>
+          <textarea rows="2" placeholder="Energie, Stimmung, was unter der Oberfläche blieb …"></textarea>
+        </div>
+
       </div>
+
       <div class="actions no-print">
         <button class="btn btn-primary" onclick="window.print()">🖨 Drucken / PDF</button>
         <button class="btn btn-secondary" onclick="resetAll()">Zurücksetzen</button>
       </div>
     </div>
 
-    <div class="sliders" id="sliders"></div>
+    <!-- RIGHT: SLIDERS -->
+    <div>
+      <div class="sliders" id="sliders"></div>
+      <div class="reco-panel" id="recoPanel">
+        <div class="reco-panel-title">Empfohlene Hilfskarten in diesem Gespräch</div>
+        <div id="recoList"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
+const BASE_URL = 'https://st-bauer.github.io/Lernrad/lerncoaching_hilfskarten_hell.html';
+
 const SEGMENTS = [
-  { label: "Motivation",               sub: "Ich bin motiviert und gehe gerne an meine Aufgaben.",       color: "#2d5c4e", short: "Motivation" },
-  { label: "Ich plane meinen Tag",    sub: "Ich weiß, was ich wann mache – und halte mich daran.",      color: "#3a7a5c", short: "Planung" },
-  { label: "Wenn's schwierig wird",   sub: "Ich bleibe dran, auch wenn etwas nicht sofort klappt.",     color: "#4a9468", short: "Durchhalten" },
-  { label: "Ich lerne clever",        sub: "Ich nutze Strategien, die wirklich zu mir passen.",         color: "#6aab7a", short: "Clever lernen" },
-  { label: "Konzentriert bleiben",    sub: "Ich schaffe es, fokussiert zu arbeiten.",                   color: "#c4622d", short: "Fokus" },
-  { label: "Wie's mir geht",          sub: "Ich fühle mich gut genug, um lernen zu können.",            color: "#d4834a", short: "Wohlbefinden" },
-  { label: "Mit anderen",             sub: "Mit Mitschüler:innen und Lehrkräften läuft es gut.",        color: "#7a5c8a", short: "Miteinander" },
-  { label: "Ich kenne meine Stärken", sub: "Ich weiß, was ich gut kann – und setze es ein.",           color: "#4a6888", short: "Stärken" },
+  { label: "Motivation",                sub: "Ich bin motiviert und gehe gerne an meine Aufgaben.",    color: "#2d5c4e", short: "Motivation",     anchor: "#karte-motivation" },
+  { label: "Ich plane meinen Tag",      sub: "Ich weiß, was ich wann mache – und halte mich daran.",   color: "#3a7a5c", short: "Planung",         anchor: "#karte-planung" },
+  { label: "Wenn's schwierig wird",     sub: "Ich bleibe dran, auch wenn etwas nicht sofort klappt.",  color: "#4a9468", short: "Durchhalten",     anchor: "#karte-durchhalten" },
+  { label: "Ich lerne clever",          sub: "Ich nutze Strategien, die wirklich zu mir passen.",      color: "#6aab7a", short: "Clever lernen",   anchor: "#karte-clever" },
+  { label: "Konzentriert bleiben",      sub: "Ich schaffe es, fokussiert zu arbeiten.",                 color: "#c4622d", short: "Fokus",           anchor: "#karte-fokus" },
+  { label: "Wie's mir geht",            sub: "Ich fühle mich gut genug, um lernen zu können.",         color: "#d4834a", short: "Wohlbefinden",    anchor: "#karte-wohlbefinden" },
+  { label: "Mit anderen",               sub: "Mit Mitschüler:innen und Lehrkräften läuft es gut.",     color: "#7a5c8a", short: "Miteinander",     anchor: "#karte-miteinander" },
+  { label: "Ich kenne meine Stärken",   sub: "Ich weiß, was ich gut kann – und setze es ein.",        color: "#4a6888", short: "Stärken",          anchor: "#karte-staerken" },
 ];
 
 let values = new Array(SEGMENTS.length).fill(5);
+let threshold = 4;
+const qrInstances = {};
 
+function setThreshold(v) {
+  threshold = parseInt(v);
+  document.getElementById('thresholdVal').textContent = v;
+  updateAllHints();
+}
+
+// Build sliders
 const slidersEl = document.getElementById('sliders');
 SEGMENTS.forEach((seg, i) => {
   const row = document.createElement('div');
   row.className = 'slider-row';
+  row.id = `row-${i}`;
+
+  const cardUrl = BASE_URL + seg.anchor;
+  const hintId = `hint-${i}`;
+  const qrId   = `qr-${i}`;
+
   row.innerHTML = `
     <div class="slider-top">
       <div class="slider-label">
@@ -140,14 +287,75 @@ SEGMENTS.forEach((seg, i) => {
       style="accent-color:${seg.color}"
       oninput="update(${i}, this.value)">
     <div class="scale-labels"><span>1 – kaum</span><span>10 – super</span></div>
+    <div class="card-hint" id="${hintId}">
+      <div class="qr-wrap" id="${qrId}"></div>
+      <div class="card-hint-text">
+        <strong>Hilfskarte empfohlen</strong>
+        Zum Bereich „${seg.short}" gibt es passende Impulse.
+        <br><a class="card-hint-link" href="${cardUrl}" target="_blank">→ Karte öffnen</a>
+      </div>
+    </div>
   `;
   slidersEl.appendChild(row);
+
+  // Generate QR code (deferred so DOM is ready)
+  setTimeout(() => {
+    new QRCode(document.getElementById(qrId), {
+      text: cardUrl,
+      width: 52,
+      height: 52,
+      colorDark: seg.color,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }, 100);
 });
 
 function update(i, v) {
   values[i] = parseInt(v);
   document.getElementById(`val-${i}`).textContent = v;
-  drawWheel(); updateScore();
+  drawWheel();
+  updateScore();
+  updateHint(i);
+  updateRecoPanel();
+}
+
+function updateHint(i) {
+  const row  = document.getElementById(`row-${i}`);
+  const hint = document.getElementById(`hint-${i}`);
+  if (values[i] <= threshold) {
+    row.classList.add('low');
+    hint.classList.add('visible');
+  } else {
+    row.classList.remove('low');
+    hint.classList.remove('visible');
+  }
+}
+
+function updateAllHints() {
+  SEGMENTS.forEach((_, i) => updateHint(i));
+  updateRecoPanel();
+}
+
+function updateRecoPanel() {
+  const panel = document.getElementById('recoPanel');
+  const list  = document.getElementById('recoList');
+  const low   = SEGMENTS.filter((_, i) => values[i] <= threshold);
+  if (low.length === 0) {
+    panel.classList.remove('visible');
+    return;
+  }
+  panel.classList.add('visible');
+  list.innerHTML = low.map(seg => `
+    <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule);">
+      <span style="width:9px;height:9px;border-radius:50%;background:${seg.color};flex-shrink:0;display:inline-block;"></span>
+      <span style="font-size:12px;font-weight:600;color:var(--ink);flex:1;">${seg.label}</span>
+      <a href="${BASE_URL}${seg.anchor}" target="_blank"
+         style="font-size:10px;color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap;">
+        Karte öffnen →
+      </a>
+    </div>
+  `).join('');
 }
 
 function updateScore() {
@@ -159,14 +367,25 @@ function updateScore() {
 
 function resetAll() {
   values = new Array(SEGMENTS.length).fill(5);
-  document.querySelectorAll('input[type=range]').forEach(r => r.value = 5);
-  SEGMENTS.forEach((_, i) => document.getElementById(`val-${i}`).textContent = 5);
+  document.querySelectorAll('.sliders input[type=range]').forEach(r => r.value = 5);
+  SEGMENTS.forEach((_, i) => {
+    document.getElementById(`val-${i}`).textContent = 5;
+    document.getElementById(`row-${i}`).classList.remove('low');
+    document.getElementById(`hint-${i}`).classList.remove('visible');
+  });
   document.querySelectorAll('textarea').forEach(t => t.value = '');
   document.getElementById('nameInput').value = '';
   document.getElementById('numInput').value = '';
+  document.getElementById('zvNum').textContent = '7';
+  document.querySelector('.vereinbarung-box input[type=range]') &&
+    (document.querySelector('.vereinbarung-box input[type=range]').value = 7);
+  document.querySelector('.vb-meta-field input[type=text]') &&
+    (document.querySelector('.vb-meta-field input[type=text]').value = '');
+  document.getElementById('recoPanel').classList.remove('visible');
   drawWheel(); updateScore();
 }
 
+// WHEEL DRAWING
 function drawWheel() {
   const canvas = document.getElementById('wheel');
   const ctx = canvas.getContext('2d');
@@ -176,11 +395,9 @@ function drawWheel() {
 
   ctx.clearRect(0, 0, W, H);
 
-  // Outer ring
   ctx.beginPath(); ctx.arc(cx, cy, maxR+6, 0, Math.PI*2);
   ctx.fillStyle = '#f0ece5'; ctx.fill();
 
-  // Grid
   for (let r = 1; r <= 10; r++) {
     const radius = (r/10)*maxR;
     ctx.beginPath();
@@ -194,7 +411,20 @@ function drawWheel() {
     ctx.stroke();
   }
 
-  // Spokes
+  // Threshold ring highlight
+  const thR = (threshold/10)*maxR;
+  ctx.beginPath();
+  for (let s = 0; s < n; s++) {
+    const a = off+s*step, x = cx+thR*Math.cos(a), y = cy+thR*Math.sin(a);
+    s===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.strokeStyle = '#c4622d';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
   for (let s = 0; s < n; s++) {
     const a = off+s*step;
     ctx.beginPath(); ctx.moveTo(cx,cy);
@@ -202,14 +432,15 @@ function drawWheel() {
     ctx.strokeStyle = '#ddd8d0'; ctx.lineWidth = 0.8; ctx.stroke();
   }
 
-  // Segment fills
+  // Low segments highlighted
   for (let s = 0; s < n; s++) {
     const a1=off+s*step, a2=off+(s+1)*step, r=(values[s]/10)*maxR;
+    const isLow = values[s] <= threshold;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,a1,a2); ctx.closePath();
-    ctx.fillStyle = SEGMENTS[s].color+'22'; ctx.fill();
+    ctx.fillStyle = isLow ? SEGMENTS[s].color+'44' : SEGMENTS[s].color+'22';
+    ctx.fill();
   }
 
-  // Main polygon
   ctx.beginPath();
   for (let s = 0; s < n; s++) {
     const a=off+s*step, r=(values[s]/10)*maxR;
@@ -223,27 +454,26 @@ function drawWheel() {
   ctx.fillStyle = grd; ctx.fill();
   ctx.strokeStyle = '#2d5c4e'; ctx.lineWidth = 2; ctx.stroke();
 
-  // Dots
   for (let s = 0; s < n; s++) {
     const a=off+s*step, r=(values[s]/10)*maxR;
     const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-    ctx.beginPath(); ctx.arc(x,y,5.5,0,Math.PI*2);
-    ctx.fillStyle=SEGMENTS[s].color; ctx.fill();
+    const isLow = values[s] <= threshold;
+    ctx.beginPath(); ctx.arc(x,y, isLow ? 7 : 5.5, 0, Math.PI*2);
+    ctx.fillStyle = isLow ? '#c4622d' : SEGMENTS[s].color;
+    ctx.fill();
     ctx.strokeStyle='white'; ctx.lineWidth=2; ctx.stroke();
   }
 
-  // Labels
   const labelR = maxR+26;
   ctx.textAlign='center'; ctx.textBaseline='middle';
   for (let s = 0; s < n; s++) {
     const a=off+s*step;
     const x=cx+labelR*Math.cos(a), y=cy+labelR*Math.sin(a);
     ctx.font='bold 10.5px DM Sans, sans-serif';
-    ctx.fillStyle=SEGMENTS[s].color;
+    ctx.fillStyle = values[s] <= threshold ? '#c4622d' : SEGMENTS[s].color;
     ctx.fillText(SEGMENTS[s].short, x, y);
   }
 
-  // Center avg
   const avg = (values.reduce((a,b)=>a+b,0)/values.length).toFixed(1);
   ctx.beginPath(); ctx.arc(cx,cy,20,0,Math.PI*2);
   ctx.fillStyle='#2d5c4e'; ctx.fill();
@@ -252,6 +482,7 @@ function drawWheel() {
   ctx.fillText(avg, cx, cy);
 }
 
+// Init
 const today = new Date();
 document.getElementById('dateInput').value =
   `${String(today.getDate()).padStart(2,'0')}.${String(today.getMonth()+1).padStart(2,'0')}.${today.getFullYear()}`;

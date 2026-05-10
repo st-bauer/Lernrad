@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Lerncoaching – Hilfskarten</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #e8e4dc;
+  font-family: 'DM Sans', sans-serif;
+  padding: 24px;
+}
+
+h1.screen-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 22px;
+  color: #3a3530;
+  margin-bottom: 6px;
+}
+.screen-sub {
+  font-size: 11px;
+  color: #a09890;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 148mm);
+  gap: 8mm;
+  justify-content: center;
+}
+
+/* A6 = 148mm × 105mm */
+.card {
+  width: 148mm;
+  height: 105mm;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.card-top {
+  padding: 7mm 7mm 5mm;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.card-eyebrow {
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+}
+
+.card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.1;
+}
+
+.card-statement {
+  font-size: 9px;
+  color: rgba(255,255,255,0.78);
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.card-body {
+  flex: 1;
+  background: white;
+  padding: 5mm 7mm 5mm;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.impulse-label {
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #a09890;
+  margin-bottom: 2px;
+}
+
+.impulse-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.impulse-list li {
+  display: flex;
+  gap: 7px;
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: #2a2520;
+}
+
+.impulse-arrow {
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.card-footer {
+  border-top: 1px solid #ede9e2;
+  padding: 3mm 7mm;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-footer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-footer-text {
+  font-size: 8.5px;
+  color: #9a9088;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* PRINT */
+@media print {
+  body { background: white; padding: 0; }
+  h1.screen-title, .screen-sub, .print-btn { display: none; }
+  .grid {
+    grid-template-columns: repeat(2, 148mm);
+    gap: 0;
+    page-break-inside: avoid;
+  }
+  .card {
+    box-shadow: none;
+    border: 0.5px solid #ddd;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+.print-btn {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 9px 20px;
+  background: #2d5c4e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.print-btn:hover { background: #235048; }
+</style>
+</head>
+<body>
+
+<h1 class="screen-title">Lerncoaching – Hilfskarten</h1>
+<p class="screen-sub">8 Karten · A6 · Zum Ausschneiden · Bei niedrigen Werten im Lernrad einsetzen</p>
+<button class="print-btn" onclick="window.print()">🖨 Drucken / PDF</button>
+
+<div class="grid">
+
+  <!-- 1: MOTIVATION -->
+  <div class="card">
+    <div class="card-top" style="background:#2d5c4e;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Motivation</div>
+      <div class="card-statement">„Ich bin motiviert und gehe gerne an meine Aufgaben."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#2d5c4e">›</span><span>Schreib auf, warum du das, was du lernst, später mal brauchen könntest – auch wenn es dir gerade egal erscheint.</span></li>
+        <li><span class="impulse-arrow" style="color:#2d5c4e">›</span><span>Starte mit der Aufgabe, die dir am meisten liegt – Schwung hilft mehr als Willensstärke.</span></li>
+        <li><span class="impulse-arrow" style="color:#2d5c4e">›</span><span>Gönn dir eine kleine Belohnung nach einem erledigten Block – nicht vorher.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#2d5c4e"></div>
+      <div class="card-footer-text">Motivation kommt oft erst, wenn man anfängt – nicht davor.</div>
+    </div>
+  </div>
+
+  <!-- 2: PLANUNG -->
+  <div class="card">
+    <div class="card-top" style="background:#3a7a5c;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Ich plane meinen Tag</div>
+      <div class="card-statement">„Ich weiß, was ich wann mache – und halte mich daran."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#3a7a5c">›</span><span>Schreib abends 3 konkrete Aufgaben auf, die du morgen erledigen willst – nicht mehr.</span></li>
+        <li><span class="impulse-arrow" style="color:#3a7a5c">›</span><span>Leg feste Lernzeiten fest – z. B. immer von 15–16 Uhr. Routine schlägt Motivation.</span></li>
+        <li><span class="impulse-arrow" style="color:#3a7a5c">›</span><span>Hak Aufgaben sichtbar ab – das gibt ein gutes Gefühl und zeigt dir, was du schaffst.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#3a7a5c"></div>
+      <div class="card-footer-text">Ein einfacher Plan ist besser als kein Plan.</div>
+    </div>
+  </div>
+
+  <!-- 3: DURCHHALTEN -->
+  <div class="card">
+    <div class="card-top" style="background:#4a9468;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Wenn's schwierig wird</div>
+      <div class="card-statement">„Ich bleibe dran, auch wenn etwas nicht sofort klappt."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#4a9468">›</span><span>Teile die schwierige Aufgabe in winzige Schritte – und mach nur den ersten.</span></li>
+        <li><span class="impulse-arrow" style="color:#4a9468">›</span><span>Erinnere dich an etwas, das du früher nicht konntest und jetzt kannst. Das hast du auch gelernt.</span></li>
+        <li><span class="impulse-arrow" style="color:#4a9468">›</span><span>Sag dir: „Ich muss das nicht perfekt machen – ich muss es nur anfangen."</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#4a9468"></div>
+      <div class="card-footer-text">Schwierig bedeutet: Du wächst gerade.</div>
+    </div>
+  </div>
+
+  <!-- 4: CLEVER LERNEN -->
+  <div class="card">
+    <div class="card-top" style="background:#5a8a5a;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Ich lerne clever</div>
+      <div class="card-statement">„Ich nutze Strategien, die wirklich zu mir passen."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#5a8a5a">›</span><span>Erkläre den Stoff laut – als ob du ihn jemandem beibringst. Wer erklärt, versteht.</span></li>
+        <li><span class="impulse-arrow" style="color:#5a8a5a">›</span><span>Lern in kurzen Einheiten (20 Min.) mit kurzen Pausen – statt stundenlang am Stück.</span></li>
+        <li><span class="impulse-arrow" style="color:#5a8a5a">›</span><span>Teste dich selbst: Deck deine Notizen ab und versuche, das Wichtigste aus dem Kopf aufzuschreiben.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#5a8a5a"></div>
+      <div class="card-footer-text">Länger lernen hilft weniger als schlauer lernen.</div>
+    </div>
+  </div>
+
+  <!-- 5: FOKUS -->
+  <div class="card">
+    <div class="card-top" style="background:#c4622d;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Konzentriert bleiben</div>
+      <div class="card-statement">„Ich schaffe es, fokussiert zu arbeiten."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#c4622d">›</span><span>Handy in einen anderen Raum legen – nicht auf stumm, sondern wirklich weg.</span></li>
+        <li><span class="impulse-arrow" style="color:#c4622d">›</span><span>Bevor du anfängst: Schreib alles auf, was dir gerade im Kopf herumgeht. Dann ist es raus.</span></li>
+        <li><span class="impulse-arrow" style="color:#c4622d">›</span><span>Probiere die 20-Minuten-Regel: 20 Minuten ohne Unterbrechung, dann 5 Minuten Pause.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#c4622d"></div>
+      <div class="card-footer-text">Konzentration ist ein Muskel – man kann ihn trainieren.</div>
+    </div>
+  </div>
+
+  <!-- 6: WOHLBEFINDEN -->
+  <div class="card">
+    <div class="card-top" style="background:#b05030;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Wie's mir geht</div>
+      <div class="card-statement">„Ich fühle mich gut genug, um lernen zu können."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#b05030">›</span><span>Sorg zuerst für die Basics: Schlaf, Essen, kurze Bewegung. Lernen funktioniert danach besser.</span></li>
+        <li><span class="impulse-arrow" style="color:#b05030">›</span><span>Schreib auf, was dich gerade belastet – oft hilft schon das Aufschreiben, um Abstand zu bekommen.</span></li>
+        <li><span class="impulse-arrow" style="color:#b05030">›</span><span>Sprich mit jemandem, dem du vertraust – du musst das nicht alleine tragen.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#b05030"></div>
+      <div class="card-footer-text">Wer auf sich achtet, kann auch für anderes Kraft haben.</div>
+    </div>
+  </div>
+
+  <!-- 7: MITEINANDER -->
+  <div class="card">
+    <div class="card-top" style="background:#7a5c8a;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Mit anderen</div>
+      <div class="card-statement">„Mit Mitschüler:innen und Lehrkräften läuft es gut."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#7a5c8a">›</span><span>Sprich eine Person direkt an – ein kurzes Gespräch kann mehr lösen als langes Grübeln.</span></li>
+        <li><span class="impulse-arrow" style="color:#7a5c8a">›</span><span>Überlege: Was könnte die andere Person fühlen oder denken? Manchmal hilft dieser Perspektivwechsel.</span></li>
+        <li><span class="impulse-arrow" style="color:#7a5c8a">›</span><span>Suche dir eine Person in der Klasse, mit der du gut lernen kannst – gemeinsam ist oft leichter.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#7a5c8a"></div>
+      <div class="card-footer-text">Gute Beziehungen machen auch das Lernen leichter.</div>
+    </div>
+  </div>
+
+  <!-- 8: STÄRKEN -->
+  <div class="card">
+    <div class="card-top" style="background:#4a6888;">
+      <span class="card-eyebrow">Lerncoaching · Hilfskarte</span>
+      <div class="card-title">Ich kenne meine Stärken</div>
+      <div class="card-statement">„Ich weiß, was ich gut kann – und setze es ein."</div>
+    </div>
+    <div class="card-body">
+      <div class="impulse-label">Was du ausprobieren kannst</div>
+      <ul class="impulse-list">
+        <li><span class="impulse-arrow" style="color:#4a6888">›</span><span>Schreib 3 Dinge auf, die dir in letzter Zeit gut gelungen sind – egal ob groß oder klein.</span></li>
+        <li><span class="impulse-arrow" style="color:#4a6888">›</span><span>Frag jemanden, der dich gut kennt: „Was denkst du, was ich besonders gut kann?"</span></li>
+        <li><span class="impulse-arrow" style="color:#4a6888">›</span><span>Nutze deine Stärken bewusst: Wenn du gut erklären kannst, erkläre anderen – das festigt auch dein eigenes Wissen.</span></li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-dot" style="background:#4a6888"></div>
+      <div class="card-footer-text">Stärken wachsen, wenn man sie nutzt und benennt.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
